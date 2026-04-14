@@ -1,227 +1,347 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>員林廣寧宮 | 三山國王官方網站</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;900&display=swap" rel="stylesheet">
-    
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
-    
-    <script src="https://www.google.com/recaptcha/api.js?render=6LcznbYsAAAAAByFa1KFc-664MZwKlv5l8tPKJyt"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>員林廣寧宮 | 三山國王官方網站</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;900&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
+    
+    <script src="https://www.google.com/recaptcha/api.js?render=6LcznbYsAAAAAByFa1KFc-664MZwKlv5l8tPKJyt"></script>
 
-    <script>
-        tailwind.config = {
-            theme: { extend: { colors: { 't-red': '#8B0000', 't-gold': '#D4AF37', 't-blue': '#0A2540' }, fontFamily: { 'serif': ['"Noto Serif TC"', 'serif'] } } }
-        }
-    </script>
-    <style>
-        body { font-family: 'serif'; background-color: #FDFCF5; scroll-behavior: smooth; }
-        .page-section { display: none; min-height: 85vh; }
-        .page-section.active { display: block; animation: fadeIn 0.6s ease; }
-        
-        .dropdown { position: relative; }
-        .dropdown-menu { display: none; position: absolute; left: 0; top: 90%; padding-top: 20px; width: 14rem; z-index: 50; }
-        .dropdown-menu::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 20px; background: transparent; }
-        .dropdown:hover .dropdown-menu { display: block; }
-        
-        #mobile-drawer { 
-            position: fixed; top: 0; right: -100%; width: 100%; height: 100%; 
-            background: white; z-index: 200; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-            overflow-y: auto; 
-        }
-        #mobile-drawer.active { right: 0; }
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { 't-red': '#8B0000', 't-gold': '#D4AF37', 't-blue': '#0A2540' }, fontFamily: { 'serif': ['"Noto Serif TC"', 'serif'] } } }
+        }
+    </script>
+    <style>
+        body { font-family: 'serif'; background-color: #FDFCF5; scroll-behavior: smooth; }
+        .page-section { display: none; min-height: 85vh; }
+        .page-section.active { display: block; animation: fadeIn 0.6s ease; }
+        
+        /* 下拉選單橋接優化 */
+        .dropdown { position: relative; }
+        .dropdown-menu { display: none; position: absolute; left: 0; top: 90%; padding-top: 20px; width: 14rem; z-index: 50; }
+        .dropdown-menu::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 20px; background: transparent; }
+        .dropdown:hover .dropdown-menu { display: block; }
+        
+        /* 手機版抽屜式選單 */
+        #mobile-drawer { 
+            position: fixed; top: 0; right: -100%; width: 100%; height: 100%; 
+            background: white; z-index: 200; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            overflow-y: auto; 
+        }
+        #mobile-drawer.active { right: 0; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
 <body class="text-slate-800">
 
-    <nav class="bg-white/95 sticky top-0 z-[100] border-b border-t-gold/20 shadow-sm p-4 font-bold">
-        <div class="container mx-auto flex justify-between items-center px-4 md:px-10">
-            <div onclick="showPage('home')" class="flex items-center space-x-2 cursor-pointer group">
-                <div class="w-10 h-10 bg-t-red rounded-full flex items-center justify-center text-white text-xl shadow-lg">廣</div>
-                <h1 class="text-xl tracking-tighter text-t-blue uppercase font-black">員林廣寧宮</h1>
-            </div>
+    <nav class="bg-white/95 sticky top-0 z-[100] border-b border-t-gold/20 shadow-sm p-4 font-bold">
+        <div class="container mx-auto flex justify-between items-center px-4 md:px-10">
+            <div onclick="showPage('home')" class="flex items-center space-x-2 cursor-pointer group">
+                <div class="w-10 h-10 bg-t-red rounded-full flex items-center justify-center text-white text-xl shadow-lg">廣</div>
+                <h1 class="text-xl tracking-tighter text-t-blue uppercase">員林廣寧宮</h1>
+            </div>
 
-            <ul class="hidden lg:flex space-x-10 text-sm items-center">
-                <li class="dropdown">
-                    <a class="cursor-pointer hover:text-t-gold pb-4 block">關於廣寧宮 <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
-                    <div class="dropdown-menu">
-                        <div class="bg-white shadow-2xl rounded-2xl border p-2 text-base">
-                            <a onclick="showPage('about','history')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg">📖 本宮歷史沿革</a>
-                            <a onclick="showPage('about','kings')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg">👑 主祀三山國王</a>
-                            <a onclick="showPage('about','deities')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg">🙏 配祀神祉介紹</a>
-                        </div>
-                    </div>
-                </li>
-                <li class="dropdown">
-                    <a class="cursor-pointer hover:text-t-gold pb-4 block">線上信眾服務 <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
-                    <div class="dropdown-menu">
-                        <div class="bg-white shadow-2xl rounded-2xl border p-2 text-base">
-                            <a onclick="showPage('service','bless')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg text-t-gold font-black">祈福點燈登記</a>
-                            <a onclick="showPage('service','donate')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg text-t-red font-black">香油錢捐獻</a>
-                        </div>
-                    </div>
-                </li>
-                <li><a onclick="showPage('products')" class="cursor-pointer hover:text-t-gold">文創商品</a></li>
-                <li><a onclick="showPage('gallery')" class="cursor-pointer hover:text-t-gold">活動花絮</a></li>
-                <li><a onclick="showPage('video')" class="cursor-pointer hover:text-t-gold">影音專區</a></li>
-                <li><a onclick="showPage('contact')" class="cursor-pointer hover:text-t-gold">聯絡我們</a></li>
-            </ul>
+            <ul class="hidden lg:flex space-x-10 text-sm items-center">
+                <li class="dropdown">
+                    <a class="cursor-pointer hover:text-t-gold pb-4 block">關於廣寧宮 <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
+                    <div class="dropdown-menu">
+                        <div class="bg-white shadow-2xl rounded-2xl border p-2">
+                            <a onclick="showPage('about','history')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg">本宮歷史沿革</a>
+                            <a onclick="showPage('about','kings')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg">主祀三山國王</a>
+                            <a onclick="showPage('about','deities')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg">配祀神祉介紹</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a class="cursor-pointer hover:text-t-gold pb-4 block">線上信眾服務 <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
+                    <div class="dropdown-menu">
+                        <div class="bg-white shadow-2xl rounded-2xl border p-2">
+                            <a onclick="showPage('service','bless')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg text-t-gold">祈福點燈登記</a>
+                            <a onclick="showPage('service','donate')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg text-t-red">香油錢捐獻</a>
+                        </div>
+                    </div>
+                </li>
+                <li><a onclick="showPage('products')" class="cursor-pointer hover:text-t-gold">文創商品</a></li>
+                <li><a onclick="showPage('gallery')" class="cursor-pointer hover:text-t-gold">活動花絮</a></li>
+                <li><a onclick="showPage('video')" class="cursor-pointer hover:text-t-gold">影音專區</a></li>
+                <li><a onclick="showPage('contact')" class="cursor-pointer hover:text-t-gold">聯絡我們</a></li>
+            </ul>
 
-            <button onclick="toggleMobileDrawer()" class="lg:hidden text-2xl text-t-blue p-2"><i class="fas fa-bars-staggered"></i></button>
-        </div>
-    </nav>
+            <button onclick="toggleMobileDrawer()" class="lg:hidden text-2xl text-t-blue p-2"><i class="fas fa-bars-staggered"></i></button>
+        </div>
+    </nav>
 
-    <div id="mobile-drawer">
-        <div class="p-6 flex justify-between items-center border-b shadow-sm">
-            <span class="font-black text-t-blue tracking-widest text-xl">廣寧宮選單</span>
-            <button onclick="toggleMobileDrawer()" class="text-3xl text-slate-400">×</button>
-        </div>
-        <div class="p-8 space-y-10">
-            <a onclick="showPage('home')" class="flex items-center space-x-4 text-2xl font-black text-t-blue border-b pb-4">
-                <i class="fas fa-home text-t-gold"></i> <span>回官網首頁</span>
-            </a>
-            <div>
-                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-4">關於廣寧宮</p>
-                <div class="grid grid-cols-1 gap-3">
-                    <a onclick="showPage('about','history')" class="p-4 bg-slate-50 rounded-2xl font-bold flex justify-between">📖 本宮歷史沿革 <i class="fas fa-chevron-right text-xs opacity-20"></i></a>
-                    <a onclick="showPage('about','kings')" class="p-4 bg-slate-50 rounded-2xl font-bold flex justify-between">👑 主祀三山國王 <i class="fas fa-chevron-right text-xs opacity-20"></i></a>
-                    <a onclick="showPage('about','deities')" class="p-4 bg-slate-50 rounded-2xl font-bold flex justify-between">🙏 配祀神祉介紹 <i class="fas fa-chevron-right text-xs opacity-20"></i></a>
-                </div>
-            </div>
-            </div>
-    </div>
+    <div id="mobile-drawer">
+        <div class="p-6 flex justify-between items-center border-b shadow-sm">
+            <span class="font-black text-t-blue tracking-widest text-xl">廣寧宮選單</span>
+            <button onclick="toggleMobileDrawer()" class="text-3xl text-slate-400">×</button>
+        </div>
+        <div class="p-8 space-y-10">
+            <a onclick="showPage('home')" class="flex items-center space-x-4 text-2xl font-black text-t-blue border-b pb-4">
+                <i class="fas fa-home text-t-gold"></i> <span>回官網首頁</span>
+            </a>
+            <div>
+                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-4">關於廣寧宮</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <a onclick="showPage('about','history')" class="p-4 bg-slate-50 rounded-2xl font-bold flex justify-between">📖 本宮歷史沿革 <i class="fas fa-chevron-right text-xs opacity-20"></i></a>
+                    <a onclick="showPage('about','kings')" class="p-4 bg-slate-50 rounded-2xl font-bold flex justify-between">👑 主祀三山國王 <i class="fas fa-chevron-right text-xs opacity-20"></i></a>
+                    <a onclick="showPage('about','deities')" class="p-4 bg-slate-50 rounded-2xl font-bold flex justify-between">🙏 配祀神祉介紹 <i class="fas fa-chevron-right text-xs opacity-20"></i></a>
+                </div>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-4">線上信眾服務</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <a onclick="showPage('service','bless')" class="p-6 bg-t-gold text-white rounded-3xl text-center font-black italic shadow-lg">祈福點燈</a>
+                    <a onclick="showPage('service','donate')" class="p-6 bg-t-red text-white rounded-3xl text-center font-black italic shadow-lg">捐獻油香</a>
+                </div>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-4">宮務資訊</p>
+                <div class="grid grid-cols-2 gap-2 text-sm font-bold">
+                    <a onclick="showPage('products')" class="p-4 border rounded-2xl text-center">文創商品</a>
+                    <a onclick="showPage('gallery')" class="p-4 border rounded-2xl text-center">花絮照片</a>
+                    <a onclick="showPage('video')" class="p-4 border rounded-2xl text-center">影音專區</a>
+                    <a onclick="showPage('contact')" class="p-4 border rounded-2xl text-center">聯絡我們</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <main class="container mx-auto px-4 py-10">
-        
-        <section id="home" class="page-section active">
-            <div class="h-[45vh] md:h-[55vh] bg-slate-900 rounded-[3rem] mb-12 flex items-center justify-center text-white text-center p-6 shadow-2xl relative overflow-hidden">
-                <div class="z-10"><h2 class="text-4xl md:text-7xl font-black font-serif tracking-[0.1em] drop-shadow-2xl">三百年香火</h2><p class="mt-4 italic opacity-90 uppercase tracking-widest text-lg">清康熙年間創立 · 員林廣寧宮</p></div>
-                <div class="absolute inset-0 bg-black/40"></div>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                <div class="lg:col-span-1 bg-white p-8 rounded-[2.5rem] shadow-xl border-t-8 border-t-red">
-                    <h3 class="font-black text-2xl mb-6 flex justify-between items-center">最新消息 <i class="fas fa-bullhorn text-red-600"></i></h3>
-                    <div id="home-news-list" class="space-y-4"></div>
-                </div>
-                <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8" id="home-services-display"></div>
-            </div>
-        </section>
+    <main class="container mx-auto px-4 py-10">
+        <section id="home" class="page-section active">
+            <div class="h-[45vh] md:h-[55vh] bg-slate-900 rounded-[3rem] mb-12 flex items-center justify-center text-white text-center p-6 shadow-2xl relative overflow-hidden">
+                <div class="z-10"><h2 class="text-4xl md:text-7xl font-black font-serif tracking-[0.1em] drop-shadow-2xl">三百年香火</h2><p class="mt-4 italic opacity-90 uppercase tracking-widest text-lg">乾隆四年創立 · 員林王爺宮</p></div>
+                <div class="absolute inset-0 bg-black/40"></div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <div class="lg:col-span-1 bg-white p-8 rounded-[2.5rem] shadow-xl border-t-8 border-t-red">
+                    <h3 class="font-black text-2xl mb-6 flex justify-between items-center">最新消息 <i class="fas fa-bullhorn text-red-600"></i></h3>
+                    <div id="home-news-list" class="space-y-4"></div>
+                </div>
+                <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8" id="home-services-display"></div>
+            </div>
+        </section>
 
-        <section id="page-about" class="page-section max-w-5xl mx-auto">
-            
-            <div id="content-history" class="sub-content bg-white p-10 md:p-16 rounded-[3.5rem] shadow-xl leading-loose">
-                <h2 class="text-4xl font-black mb-8 text-t-blue border-b pb-4 font-serif italic">本宮歷史沿革</h2>
-                <div class="mb-10">
-                    <h3 class="text-2xl font-bold mb-4 text-gray-800">員林廣寧宮：三山守護下的古城記憶</h3>
-                    <p class="text-lg text-gray-700 leading-relaxed">
-                        在員林最繁忙的中正路商圈，隱身著一座見證三百年滄桑的古廟——廣寧宮。它不僅是一座宗教建築，更是一部濃縮的員林開發史。
-                    </p>
-                </div>
-                <div class="space-y-12">
-                    <section>
-                        <h4 class="text-xl font-bold mb-3 text-t-blue flex items-center">
-                            <span class="bg-t-blue text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">01</span>
-                            歷史溯源：康熙年間的開墾燈塔
-                        </h4>
-                        <p class="text-lg text-gray-700 ml-11">
-                            廣寧宮的歷史可追溯至清康熙五十年前後（約 1711 年）。當時，大批廣東潮州府的移民跨越黑水溝來到員林平原。先民從原鄉迎請了三山國王的神尊隨行。隨著員林發展，廣寧宮與一旁的「福寧宮」共同守護著員林的心臟地帶。
-                        </p>
-                    </section>
-                    <section>
-                        <h4 class="text-xl font-bold mb-3 text-t-blue flex items-center">
-                            <span class="bg-t-blue text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">02</span>
-                            「七州公」：客家先民的團結象徵
-                        </h4>
-                        <div class="text-lg text-gray-700 ml-11 space-y-2">
-                            <p><strong class="text-gray-900">名稱背後：</strong> 「七州」象徵這座廟宇曾是所有潮州客家移民的最高信仰中心。</p>
-                            <p><strong class="text-gray-900">族群見證：</strong> 證明了員林早期曾是客家族群與閩南族群交會的重要據點。</p>
-                        </div>
-                    </section>
-                    <section>
-                        <h4 class="text-xl font-bold mb-3 text-t-blue flex items-center">
-                            <span class="bg-t-blue text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">03</span>
-                            建築美學：古老工藝的傳承
-                        </h4>
-                        <p class="text-lg text-gray-700 ml-11">
-                            廟內保存了多面清代及日治時期的古匾，字跡斑駁中透著歷史的重量。其石柱與剪黏工藝依然能見到昔日匠師的精湛心血。
-                        </p>
-                    </section>
-                </div>
-            </div>
+        <section id="page-about" class="page-section max-w-5xl mx-auto py-10">
+    <div id="content-history" class="sub-content bg-white p-10 md:p-16 rounded-[3.5rem] shadow-xl leading-loose">
+        <h2 class="text-4xl font-black mb-8 text-t-blue border-b pb-4 font-serif">本宮歷史沿革</h2>
+        
+        <div class="mb-10">
+            <h3 class="text-2xl font-bold mb-4 text-gray-800">員林廣寧宮：三山守護下的古城記憶</h3>
+            <p class="text-lg text-gray-700 leading-relaxed">
+                在員林最繁忙的中正路商圈，隱身著一座見證三百年滄桑的古廟——廣寧宮。它不僅是一座宗教建築，更是一部濃縮的員林開發史。
+            </p>
+        </div>
 
-            <div id="content-kings" class="sub-content hidden bg-white p-10 md:p-16 rounded-[3.5rem] shadow-xl text-center">
-                <h2 class="text-4xl font-black mb-12 text-t-blue font-serif italic border-b pb-4">主祀：三山國王</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="group">
-                        <div class="overflow-hidden rounded-[2.5rem] bg-slate-50 border-4 border-slate-50 shadow-inner mb-6 aspect-[4/5]">
-                            <img src="images/king-1.jpg" alt="巾山大國王" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                        </div>
-                        <div class="p-6 bg-slate-50 rounded-[2rem]">
-                            <h3 class="font-bold text-2xl mb-2 text-gray-800">巾山大國王</h3>
-                            <p class="text-gray-600 text-base">主理山川自然之氣，象徵秩序與安定。</p>
-                        </div>
-                    </div>
-                    <div class="group">
-                        <div class="overflow-hidden rounded-[2.5rem] bg-slate-50 border-4 border-slate-50 shadow-inner mb-6 aspect-[4/5]">
-                            <img src="images/king-2.jpg" alt="明山二國王" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                        </div>
-                        <div class="p-6 bg-slate-50 rounded-[2rem]">
-                            <h3 class="font-bold text-2xl mb-2 text-gray-800">明山二國王</h3>
-                            <p class="text-gray-600 text-base">主掌智慧與福澤，祈求事業家運興旺。</p>
-                        </div>
-                    </div>
-                    <div class="group">
-                        <div class="overflow-hidden rounded-[2.5rem] bg-slate-50 border-4 border-slate-50 shadow-inner mb-6 aspect-[4/5]">
-                            <img src="images/king-3.jpg" alt="獨山三國王" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                        </div>
-                        <div class="p-6 bg-slate-50 rounded-[2rem]">
-                            <h3 class="font-bold text-2xl mb-2 text-gray-800">獨山三國王</h3>
-                            <p class="text-gray-600 text-base">主司武德與驅邪，鎮守鄉里避災除穢。</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="space-y-12">
+            <section>
+                <h4 class="text-xl font-bold mb-3 text-t-blue flex items-center">
+                    <span class="bg-t-blue text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">01</span>
+                    歷史溯源：康熙年間的開墾燈塔
+                </h4>
+                <p class="text-lg text-gray-700 ml-11">
+                    廣寧宮的歷史可追溯至清康熙五十年前後（約 1711 年）。當時，大批廣東潮州府的移民跨越黑水溝來到員林平原。為了祈求在陌生地界開墾平安，先民從原鄉迎請了三山國王的神尊隨行。最初，這只是一座簡易的草庵。隨著員林逐漸發展成為中部重要的集散中心，廣寧宮也歷經多次重修，規模日益宏大，與一旁的「福寧宮」共同守護著員林的心臟地帶。
+                </p>
+            </section>
 
-            <div id="content-deities" class="sub-content hidden grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="bg-white p-8 rounded-[3.5rem] shadow-xl border-t-8 border-yellow-500 flex flex-col items-center">
-                    <div class="w-40 h-40 rounded-full overflow-hidden border-4 border-yellow-50 mb-6 shadow-md"><img src="images/wenchang.jpg" class="w-full h-full object-cover"></div>
-                    <h3 class="font-bold text-2xl mb-3">文昌帝君</h3>
-                    <p class="text-gray-600 text-base px-4">主掌功名學業，祈求智慧與金榜題名。</p>
-                </div>
-                <div class="bg-white p-8 rounded-[3.5rem] shadow-xl border-t-8 border-blue-500 flex flex-col items-center">
-                    <div class="w-40 h-40 rounded-full overflow-hidden border-4 border-blue-50 mb-6 shadow-md"><img src="images/guanyin.jpg" class="w-full h-full object-cover"></div>
-                    <h3 class="font-bold text-2xl mb-3">觀音佛祖</h3>
-                    <p class="text-gray-600 text-base px-4">慈悲救苦，保佑眾生身心平安健康。</p>
-                </div>
-                <div class="bg-white p-8 rounded-[3.5rem] shadow-xl border-t-8 border-pink-500 flex flex-col items-center">
-                    <div class="w-40 h-40 rounded-full overflow-hidden border-4 border-pink-50 mb-6 shadow-md"><img src="images/zhusheng.jpg" class="w-full h-full object-cover"></div>
-                    <h3 class="font-bold text-2xl mb-3">註生娘娘</h3>
-                    <p class="text-gray-600 text-base px-4">掌管生育護佑母子，祈求姻緣與子嗣。</p>
-                </div>
-            </div>
+            <section>
+                <h4 class="text-xl font-bold mb-3 text-t-blue flex items-center">
+                    <span class="bg-t-blue text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">02</span>
+                    「七州公」：客家先民的團結象徵
+                </h4>
+                <div class="text-lg text-gray-700 ml-11 space-y-2">
+                    <p><strong class="text-gray-900">名稱背後：</strong> 「七州」代表了當時清代廣東潮州府下轄的縣份，象徵這座廟宇是所有潮州客家移民的最高信仰中心。</p>
+                    <p><strong class="text-gray-900">族群見證：</strong> 雖然隨著時光推移，當年的客家後裔多已「福佬化」，但廣寧宮的存在，證明了員林早期曾是客家族群與閩南族群交會、共融的重要據點。</p>
+                </div>
+            </section>
 
-        </section>
+            <section>
+                <h4 class="text-xl font-bold mb-3 text-t-blue flex items-center">
+                    <span class="bg-t-blue text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">03</span>
+                    建築美學：古老工藝的傳承
+                </h4>
+               <div id="content-kings" class="sub-content hidden bg-white p-12 rounded-[3.5rem] shadow-xl text-center">
 
-        <section id="page-service" class="page-section max-w-2xl mx-auto py-10">...</section>
-        <section id="products" class="page-section max-w-7xl mx-auto py-10">...</section>
-        </main>
+                <h2 class="text-3xl font-black mb-12 text-t-blue font-serif">主祀：三山國王</h2>
 
-    <script>
-        // ... 原本的 Firebase 與 showPage 邏輯 ...
-        function showPage(pageId, subId = null) {
-            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-            const target = document.getElementById('page-' + pageId) || document.getElementById(pageId);
-            if(target) target.classList.add('active');
-            
-            if(subId) {
-                // 隱身所有 sub-content
-                document.querySelectorAll('.sub-content').forEach(c => c.classList.add('hidden'));
-                // 顯示特定的 sub-content
-                const subContent =
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                    <div class="p-10 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-bold text-xl">巾山大國王</div>
+
+                    <div class="p-10 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-bold text-xl">明山二國王</div>
+
+                    <div class="p-10 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-bold text-xl">獨山三國王</div>
+
+                </div>
+
+            </div>
+
+            <div id="content-deities" class="sub-content hidden grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+
+                <div class="bg-white p-10 rounded-[3rem] shadow-xl border-t-8 border-yellow-500 font-bold text-xl">文昌帝君</div>
+
+                <div class="bg-white p-10 rounded-[3rem] shadow-xl border-t-8 border-blue-500 font-bold text-xl">觀音佛祖</div>
+
+                <div class="bg-white p-10 rounded-[3rem] shadow-xl border-t-8 border-pink-500 font-bold text-xl">註生娘娘</div>
+
+            </div>
+
+        </section>
+        </section>
+
+        <section id="page-service" class="page-section max-w-2xl mx-auto py-10">
+            <div id="content-bless" class="sub-content bg-white p-10 md:p-16 rounded-[3.5rem] shadow-2xl border-t-8 border-t-gold">
+                <h2 class="text-3xl font-black text-center text-t-gold mb-8 italic">祈福點燈登記</h2>
+                <div class="space-y-4">
+                    <div style="display:none;"><input type="text" id="hp_bless"></div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-400 ml-2">信眾姓名</label>
+                        <input type="text" id="b_name" placeholder="請輸入姓名" class="w-full border-2 p-4 rounded-2xl outline-none focus:border-t-gold">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-400 ml-2">連絡電話</label>
+                        <input type="tel" id="b_phone" placeholder="請輸入電話" class="w-full border-2 p-4 rounded-2xl outline-none focus:border-t-gold">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-bold text-slate-400 ml-2">出生日期 (農/國曆)</label>
+                            <input type="date" id="b_birth_date" class="w-full border-2 p-4 rounded-2xl outline-none text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-400 ml-2">出生時辰</label>
+                            <select id="b_birth_hour" class="w-full border-2 p-4 rounded-2xl font-bold bg-slate-50 text-sm">
+                                <option value="吉時">吉時 (時辰不詳)</option>
+                                <option value="子時 (23-01)">子時 (23-01)</option>
+                                <option value="丑時 (01-03)">丑時 (01-03)</option>
+                                <option value="寅時 (03-05)">寅時 (03-05)</option>
+                                <option value="卯時 (05-07)">卯時 (05-07)</option>
+                                <option value="辰時 (07-09)">辰時 (07-09)</option>
+                                <option value="巳時 (09-11)">巳時 (09-11)</option>
+                                <option value="午時 (11-13)">午時 (11-13)</option>
+                                <option value="未時 (13-15)">未時 (13-15)</option>
+                                <option value="申時 (15-17)">申時 (15-17)</option>
+                                <option value="酉時 (17-19)">酉時 (17-19)</option>
+                                <option value="戌時 (19-21)">戌時 (19-21)</option>
+                                <option value="亥時 (21-23)">亥時 (21-23)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <select id="service-select" class="w-full border-2 p-4 rounded-2xl font-bold bg-slate-50"></select>
+                    <button onclick="submitOrder('點燈')" id="btn-bless" class="w-full bg-t-gold text-white py-5 rounded-3xl font-black shadow-xl hover:bg-black transition text-lg mt-4">確認登記</button>
+                </div>
+            </div>
+            
+            <div id="content-donate" class="sub-content hidden bg-white p-10 md:p-16 rounded-[3.5rem] shadow-2xl border-t-8 border-t-red text-center">
+                <h2 class="text-3xl font-black text-t-red mb-8 italic">香油錢捐獻</h2>
+                <div style="display:none;"><input type="text" id="hp_donate"></div>
+                <input type="number" id="d_amount" placeholder="金額 (TWD)" class="w-full border-2 p-6 rounded-2xl text-4xl font-black text-center border-red-100 bg-red-50/20 outline-none mb-6">
+                <input type="text" id="d_name" placeholder="姓名" class="w-full border-2 p-4 rounded-2xl mb-4">
+                <input type="tel" id="d_phone" placeholder="電話" class="w-full border-2 p-4 rounded-2xl mb-6">
+                <button onclick="submitOrder('捐獻')" id="btn-donate" class="w-full bg-t-red text-white py-5 rounded-3xl font-black shadow-xl hover:bg-black transition text-lg">確認送出</button>
+            </div>
+        </section>
+
+        <section id="products" class="page-section max-w-7xl mx-auto py-10"><h2 class="text-4xl font-black text-center mb-16 font-serif uppercase tracking-widest">文創商品展示</h2><div id="display-products" class="grid grid-cols-2 md:grid-cols-4 gap-8"></div></section>
+        <section id="video" class="page-section max-w-6xl mx-auto py-10"><h2 class="text-4xl font-black text-center mb-16 font-serif">影音紀實作品</h2><div id="display-videos" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div></section>
+        <section id="gallery" class="page-section max-w-7xl mx-auto py-10"><h2 class="text-4xl font-black text-center mb-16 font-serif">活動照片花絮</h2><div id="display-photos" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div></section>
+        <section id="contact" class="page-section max-w-5xl mx-auto py-10">
+            <div class="bg-white p-12 md:p-20 rounded-[4rem] shadow-2xl grid grid-cols-1 md:grid-cols-2 gap-12 text-center md:text-left">
+                <div><h3 class="text-3xl font-black mb-8 border-b pb-4 text-t-red font-serif italic">聯絡資訊</h3><div class="space-y-8 text-xl text-slate-600"><p><i class="fas fa-map-marker-alt mr-4 text-t-gold"></i> 彰化縣員林市中正路360號</p><p><i class="fas fa-phone mr-4 text-t-gold"></i> 04-8320436</p><p><i class="fas fa-clock mr-4 text-t-gold"></i> 每日 06:00 - 21:00</p></div></div>
+                <div class="flex flex-col justify-center items-center"><h3 class="text-2xl font-black mb-10 text-t-blue">社群追蹤</h3><div class="flex space-x-12 text-6xl"><a href="#" class="text-green-500 hover:scale-110 transition"><i class="fab fa-line"></i></a><a href="#" class="text-blue-700 hover:scale-110 transition"><i class="fab fa-facebook"></i></a><a href="#" class="text-pink-500 hover:scale-110 transition"><i class="fab fa-instagram"></i></a></div></div>
+            </div>
+        </section>
+    </main>
+
+    <div id="bank-modal" class="fixed inset-0 bg-black/90 z-[300] hidden items-center justify-center p-6 backdrop-blur-md">
+        <div class="bg-white rounded-[3rem] p-10 max-w-lg w-full text-center shadow-2xl animate-fadeIn">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-4xl mx-auto mb-8"><i class="fas fa-check"></i></div>
+            <h2 class="text-3xl font-black mb-4">登記成功</h2><p class="text-slate-500 mb-8 leading-relaxed">感謝您的發心。請完成匯款後告知本宮。</p>
+            <div class="bg-slate-50 p-8 rounded-3xl text-left border-2 border-dashed border-slate-200 mb-8 font-mono text-sm"><p><b>銀行：</b> 員林市農會 (614)</p><p><b>戶名：</b> 員林廣寧宮</p><p><b>帳號：</b> 1234-5678-9012-3456</p></div>
+            <button onclick="document.getElementById('bank-modal').classList.add('hidden')" class="w-full bg-t-blue text-white py-5 rounded-2xl font-black">返回官網</button>
+        </div>
+    </div>
+    <div id="news-modal" class="fixed inset-0 bg-black/80 z-[300] hidden items-center justify-center p-6 backdrop-blur-sm">
+        <div class="bg-white rounded-[3rem] p-12 max-w-md w-full relative shadow-2xl">
+            <h2 id="m-title" class="text-3xl font-black mb-6 border-b pb-6 text-t-blue font-serif"></h2>
+            <div id="m-content" class="leading-loose text-slate-600 whitespace-pre-wrap max-h-[50vh] overflow-y-auto pr-4"></div>
+            <button onclick="document.getElementById('news-modal').classList.add('hidden')" class="w-full mt-10 bg-slate-900 text-white py-5 rounded-2xl font-black">關閉詳情</button>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = { apiKey: "AIzaSyB2PuFt4epkjrkEByoSEqcw88eAVuxjB70", authDomain: "testproject-fb870.firebaseapp.com", projectId: "testproject-fb870", storageBucket: "testproject-fb870.firebasestorage.app", messagingSenderId: "164908049871", appId: "1:164908049871:web:21e77c3bb591de85685eba" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // 選單與頁面切換
+        function toggleMobileDrawer() {
+            const dr = document.getElementById('mobile-drawer');
+            dr.classList.toggle('active');
+            document.body.style.overflow = dr.classList.contains('active') ? 'hidden' : 'auto';
+        }
+
+        function showPage(pageId, subId = null) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('page-' + pageId) || document.getElementById(pageId);
+            if(target) target.classList.add('active');
+            if(subId) {
+                document.querySelectorAll('.sub-content').forEach(c => c.classList.add('hidden'));
+                const subContent = document.getElementById('content-' + subId);
+                if(subContent) subContent.classList.remove('hidden');
+            }
+            document.getElementById('mobile-drawer').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // 資料同步監聽 (公告/商品/服務/影片/照片)
+        db.collection("news").orderBy("createdAt","desc").onSnapshot(snap => { let h = ""; snap.forEach(doc => { const n = doc.data(); h += `<div onclick="openModal('${n.title}', \`${n.content}\` )" class="p-5 bg-slate-50 border-l-[10px] border-t-red rounded-2xl cursor-pointer hover:bg-red-50 font-black text-lg truncate shadow-sm transition">${n.title}</div>`; }); document.getElementById('home-news-list').innerHTML = h || '<p class="text-slate-400">目前尚無消息</p>'; });
+        function openModal(t,c) { document.getElementById('m-title').innerText=t; document.getElementById('m-content').innerText=c; document.getElementById('news-modal').classList.remove('hidden'); }
+
+        db.collection("services").onSnapshot(snap => { let grid = ""; let opts = '<option value="" disabled selected>請選擇項目</option>'; snap.forEach(doc => { const s = doc.data(); grid += `<div class="bg-white p-8 rounded-3xl border-t-8 border-t-gold shadow-xl flex justify-between items-center font-bold text-xl"><span>${s.name}</span><span class="text-t-red font-black text-3xl">$${s.price}</span></div>`; opts += `<option value="${s.name}" data-price="${s.price}">${s.name} ($${s.price})</option>`; }); document.getElementById('home-services-display').innerHTML = grid; document.getElementById('service-select').innerHTML = opts; });
+        db.collection("products").onSnapshot(snap => { let h = ""; snap.forEach(doc => { const p = doc.data(); h += `<div class="bg-white p-6 rounded-3xl shadow-xl text-center border hover:scale-105 transition"><img src="${p.url}" class="w-full h-52 object-cover rounded-2xl mb-4 shadow-md"><h4 class="font-bold text-xl mb-2 text-t-blue">${p.name}</h4><p class="text-t-red font-black text-2xl">$${p.price}</p></div>`; }); document.getElementById('display-products').innerHTML = h; });
+        db.collection("videos").onSnapshot(snap => { let h = ""; snap.forEach(doc => { const v = doc.data(); h += `<div class="bg-white p-4 rounded-[2.5rem] shadow-2xl"><div class="aspect-video bg-black rounded-[2rem] overflow-hidden shadow-inner"><iframe class="w-full h-full" src="https://www.youtube.com/embed/${v.ytid}" frameborder="0" allowfullscreen></iframe></div><h4 class="mt-6 px-4 font-black text-xl text-t-blue">${v.title}</h4></div>`; }); document.getElementById('display-videos').innerHTML = h; });
+        db.collection("photos").onSnapshot(snap => { let h = ""; snap.forEach(doc => { h += `<div class="rounded-3xl overflow-hidden shadow-lg border-4 border-white aspect-square"><img src="${doc.data().url}" class="w-full h-full object-cover"></div>`; }); document.getElementById('display-photos').innerHTML = h; });
+
+        // 訂單提交邏輯
+        async function submitOrder(type) {
+            const hp = type === '點燈' ? document.getElementById('hp_bless').value : document.getElementById('hp_donate').value; if(hp !== "") return;
+            const btn = type === '點燈' ? document.getElementById('btn-bless') : document.getElementById('btn-donate');
+            const name = type === '點燈' ? document.getElementById('b_name').value : document.getElementById('d_name').value;
+            const phone = type === '點燈' ? document.getElementById('b_phone').value : document.getElementById('d_phone').value;
+            if(!name || !phone) return alert("請填寫姓名與電話");
+
+            btn.disabled = true; btn.innerText = "驗證中...";
+            grecaptcha.ready(function() {
+                grecaptcha.execute('6LcznbYsAAAAAByFa1KFc-664MZwKlv5l8tPKJyt', {action: 'submit_order'}).then(async function(token) {
+                    let data = { category: type, status: "待查帳", year: "2026", captchaToken: token, createdAt: firebase.firestore.FieldValue.serverTimestamp(), name, phone };
+                    if(type === '點燈') {
+                        data.birthday = document.getElementById('b_birth_date').value;
+                        data.birthHour = document.getElementById('b_birth_hour').value;
+                        data.item = document.getElementById('service-select').value;
+                        data.amount = document.getElementById('service-select').selectedOptions[0].getAttribute('data-price');
+                    } else {
+                        data.amount = document.getElementById('d_amount').value;
+                        data.item = "油香功德";
+                    }
+                    try {
+                        await db.collection("orders").add(data);
+                        document.getElementById('bank-modal').classList.remove('hidden');
+                        btn.disabled = false; btn.innerText = (type === '點燈' ? "確認登記" : "完成功德登記");
+                    } catch (e) { alert("發送失敗"); btn.disabled = false; }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
