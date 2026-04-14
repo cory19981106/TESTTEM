@@ -1,103 +1,109 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>員林廣寧宮 | 乾隆四年創立 · 三山國王官方網站</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>廣寧宮管理系統 | 登入驗證</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;900&display=swap" rel="stylesheet">
+    
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
-    <script>
-        tailwind.config = { theme: { extend: { colors: { 't-red': '#8B0000', 't-gold': '#D4AF37', 't-blue': '#0A2540' }, fontFamily: { 'serif': ['"Noto Serif TC"', 'serif'] } } } }
-    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+
     <style>
-        body { font-family: 'serif'; background-color: #FDFCF5; scroll-behavior: smooth; }
-        .page-section { display: none; min-height: 85vh; }
-        .page-section.active { display: block; animation: fadeInUp 0.8s ease; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #0f172a; }
+        .login-card { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="text-slate-800">
+<body class="flex items-center justify-center min-h-screen p-4">
 
-    <nav class="bg-white/95 sticky top-0 z-50 border-b border-t-gold/20 shadow-sm p-4">
-        <div class="container mx-auto flex justify-between items-center px-6">
-            <div onclick="showPage('home')" class="flex items-center space-x-3 cursor-pointer">
-                <div class="w-10 h-10 bg-t-red rounded-full flex items-center justify-center text-white font-black">廣</div>
-                <h1 class="text-xl font-black text-t-blue tracking-tighter">員林廣寧宮</h1>
+    <div class="login-card bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl w-full max-w-md text-center">
+        <div class="w-20 h-20 bg-[#8B0000] rounded-full flex items-center justify-center text-white font-black mx-auto mb-8 shadow-xl text-3xl border-4 border-white">廣</div>
+        
+        <h2 class="text-3xl font-black text-slate-800 mb-2 tracking-tighter">後台管理登入</h2>
+        <p class="text-slate-400 text-xs mb-10 uppercase tracking-[0.2em] font-bold">ZJ AD FILM Secure Portal</p>
+        
+        <div class="space-y-5 text-left">
+            <div>
+                <label class="text-xs font-bold text-slate-400 ml-2 mb-2 block">管理員信箱</label>
+                <input type="email" id="email" placeholder="example@mail.com" class="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 focus:bg-white bg-slate-50 transition-all">
             </div>
-            <ul class="hidden lg:flex space-x-6 text-sm font-bold">
-                <li><a onclick="showPage('history')" class="cursor-pointer hover:text-t-gold">歷史沿革</a></li>
-                <li><a onclick="showPage('deity')" class="cursor-pointer hover:text-t-gold">奉祀神祇</a></li>
-                <li><a onclick="showPage('gallery')" class="cursor-pointer hover:text-t-gold">活動花絮</a></li>
-                <li><button onclick="showPage('bless')" class="bg-t-gold text-white px-5 py-2 rounded-full">祈福點燈</button></li>
-                <li><button onclick="showPage('donate')" class="bg-t-red text-white px-5 py-2 rounded-full">捐獻油香</button></li>
-            </ul>
+            
+            <div>
+                <label class="text-xs font-bold text-slate-400 ml-2 mb-2 block">密碼</label>
+                <input type="password" id="password" placeholder="••••••••" class="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 focus:bg-white bg-slate-50 transition-all">
+            </div>
+
+            <button onclick="handleLogin()" id="login-btn" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black shadow-2xl hover:bg-black active:scale-[0.98] transition-all mt-4 flex items-center justify-center">
+                <span id="btn-text">驗證並進入系統</span>
+                <i id="btn-spinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+            </button>
         </div>
-    </nav>
-
-    <main class="container mx-auto px-6 py-10">
-        <section id="home" class="page-section active">
-            <div class="rounded-[3rem] overflow-hidden h-[60vh] bg-slate-900 relative shadow-2xl mb-16">
-                <div class="absolute inset-0 bg-black/40 z-10 flex flex-col justify-center items-center text-white text-center p-6">
-                    <p class="text-t-gold tracking-[0.4em] mb-4 text-sm font-bold uppercase">員林王爺宮</p>
-                    <h2 class="text-5xl md:text-7xl font-black mb-6 tracking-widest drop-shadow-2xl font-serif">三百年香火 · 守護員林</h2>
-                </div>
-                <div class="absolute inset-0 flex items-center justify-center text-gray-700 italic">【ZJ影像 專業作品展示區】</div>
-            </div>
-            <h3 class="text-2xl font-black text-t-blue mb-8 border-l-4 border-t-gold pl-4 italic">目前開放祈福</h3>
-            <div id="display-services" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
-        </section>
-
-        <section id="history" class="page-section max-w-4xl mx-auto py-10">
-            <h2 class="text-4xl font-black text-t-blue mb-10 border-l-8 border-t-red pl-6">歷史沿革</h2>
-            <div id="display-about" class="text-slate-700 text-lg leading-loose whitespace-pre-wrap">載入中...</div>
-        </section>
-
-        <section id="deity" class="page-section max-w-6xl mx-auto py-10">
-            <h2 class="text-4xl font-black text-center text-t-blue mb-16 tracking-widest">奉祀神祇</h2>
-            <div id="display-deities" class="grid grid-cols-1 md:grid-cols-3 gap-12"></div>
-        </section>
-
-        <section id="gallery" class="page-section max-w-6xl mx-auto py-10">
-            <h2 class="text-3xl font-black text-t-blue mb-10 text-center">活動花絮照片</h2>
-            <div id="display-photos" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-        </section>
-
-        </main>
+        
+        <p class="mt-8 text-[10px] text-slate-300">本系統僅供員林廣寧宮授權人員使用</p>
+    </div>
 
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyB2PuFt4epkjrkEByoSEqcw88eAVuxjB70", authDomain: "testproject-fb870.firebaseapp.com", projectId: "testproject-fb870", storageBucket: "testproject-fb870.firebasestorage.app", messagingSenderId: "164908049871", appId: "1:164908049871:web:21e77c3bb591de85685eba" };
+        // 1. Firebase 初始化 (確認與你的專案對齊)
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2PuFt4epkjrkEByoSEqcw88eAVuxjB70",
+            authDomain: "testproject-fb870.firebaseapp.com",
+            projectId: "testproject-fb870",
+            storageBucket: "testproject-fb870.firebasestorage.app",
+            messagingSenderId: "164908049871",
+            appId: "1:164908049871:web:21e77c3bb591de85685eba"
+        };
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
 
-        function showPage(id) {
-            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            window.scrollTo(0, 0);
+        const auth = firebase.auth();
+
+        // 2. 登入邏輯
+        async function handleLogin() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const btn = document.getElementById('login-btn');
+            const btnText = document.getElementById('btn-text');
+            const spinner = document.getElementById('btn-spinner');
+
+            if (!email || !password) {
+                alert("請填寫帳號及密碼！");
+                return;
+            }
+
+            // 進入載入狀態
+            btn.disabled = true;
+            btnText.innerText = "驗證身分中";
+            spinner.classList.remove('hidden');
+
+            try {
+                // Firebase 驗證
+                await auth.signInWithEmailAndPassword(email, password);
+                
+                // 登入成功後跳轉 (使用相對路徑防止 GitHub Pages 報錯)
+                window.location.replace("./admin.html");
+                
+            } catch (error) {
+                console.error("Login Error:", error);
+                let message = "登入失敗，請確認帳號密碼。";
+                
+                if (error.code === 'auth/user-not-found') message = "此帳號不存在。";
+                if (error.code === 'auth/wrong-password') message = "密碼輸入錯誤。";
+                if (error.code === 'auth/too-many-requests') message = "嘗試次數過多，請稍後再試。";
+                
+                alert(message);
+                
+                // 恢復按鈕狀態
+                btn.disabled = false;
+                btnText.innerText = "驗證並進入系統";
+                spinner.classList.add('hidden');
+            }
         }
 
-        // --- 全站即時數據連線 ---
-        db.collection("settings").doc("about").onSnapshot(doc => { if(doc.exists) document.getElementById('display-about').innerText = doc.data().content; });
-        
-        db.collection("deities").orderBy("createdAt", "desc").onSnapshot(snap => {
-            let html = ""; snap.forEach(doc => {
-                const d = doc.data();
-                html += `<div class="bg-white p-8 rounded-[3rem] shadow-xl border-t-8 border-t-red text-center">
-                    <img src="${d.url}" class="w-full h-64 object-cover rounded-[2rem] mb-6 shadow-md"><h4 class="text-2xl font-black text-t-blue mb-4">${d.name}</h4><p class="text-slate-500">${d.info}</p>
-                </div>`;
-            });
-            document.getElementById('display-deities').innerHTML = html;
-        });
-
-        db.collection("photos").orderBy("createdAt", "desc").onSnapshot(snap => {
-            let html = ""; snap.forEach(doc => { html += `<div class="rounded-3xl overflow-hidden shadow-lg border-4 border-white aspect-square"><img src="${doc.data().url}" class="w-full h-full object-cover"></div>`; });
-            document.getElementById('display-photos').innerHTML = html;
-        });
-
-        db.collection("services").onSnapshot(snap => {
-            let html = ""; snap.forEach(doc => { const s = doc.data(); html += `<div class="bg-white p-8 rounded-3xl shadow-sm border-t-4 border-t-gold text-center font-bold text-xl">${s.name}<br><span class="text-t-red font-black">$${s.price}</span></div>`; });
-            document.getElementById('display-services').innerHTML = html;
+        // 監聽 Enter 鍵直接登入
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') handleLogin();
         });
     </script>
 </body>
