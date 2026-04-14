@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>員林廣寧宮 | 三山國王祖廟官方網站</title>
+    <title>員林廣寧宮 | 三山國王官方網站</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;900&display=swap" rel="stylesheet">
@@ -18,8 +18,8 @@
     </script>
     <style>
         body { font-family: 'serif'; background-color: #FDFCF5; scroll-behavior: smooth; }
-        .page-section { display: none; min-height: 85vh; }
-        .page-section.active { display: block; animation: fadeIn 0.8s ease; }
+        .page-section { display: none; min-height: 80vh; }
+        .page-section.active { display: block; animation: fadeIn 0.6s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         #payment-modal { display: none; }
         #payment-modal.active { display: flex; }
@@ -34,133 +34,77 @@
                 <h1 class="text-xl font-black text-t-blue tracking-tighter">員林廣寧宮</h1>
             </div>
             <ul class="hidden lg:flex items-center space-x-6 text-sm">
-                <li class="relative group cursor-pointer py-4 hover:text-t-gold transition">關於本宮 <i class="fas fa-chevron-down text-[10px] ml-1"></i>
-                    <div class="hidden group-hover:block absolute top-full left-0 bg-white shadow-2xl rounded-b-xl border-t-4 border-t-red w-48 text-slate-700">
-                        <a onclick="showPage('history')" class="block px-6 py-4 hover:bg-slate-50 border-b">歷史沿革</a>
-                        <a onclick="showPage('deity')" class="block px-6 py-4 hover:bg-slate-50">奉祀神祇</a>
-                    </div>
-                </li>
-                <li><a onclick="showPage('gallery')" class="cursor-pointer hover:text-t-gold transition">活動照片</a></li>
-                <li><a onclick="showPage('video')" class="cursor-pointer hover:text-t-red transition">影音專區</a></li>
+                <li><a onclick="showPage('news')" class="cursor-pointer hover:text-t-gold">最新消息</a></li>
+                <li><a onclick="showPage('gallery')" class="cursor-pointer hover:text-t-gold">活動照片</a></li>
+                <li><a onclick="showPage('video')" class="cursor-pointer hover:text-t-red">影音專區</a></li>
                 <li><button onclick="showPage('bless')" class="bg-t-gold text-white px-5 py-2 rounded-full shadow-md">祈福報名</button></li>
                 <li><button onclick="showPage('donate')" class="bg-t-red text-white px-5 py-2 rounded-full shadow-md">香油錢捐獻</button></li>
-                <li><a onclick="showPage('contact')" class="cursor-pointer px-2 hover:text-t-gold"><i class="fas fa-map-marker-alt"></i></a></li>
             </ul>
         </div>
     </nav>
 
     <main class="container mx-auto px-6 py-10">
-
         <section id="home" class="page-section active">
-            <div class="rounded-[2.5rem] overflow-hidden h-[60vh] bg-slate-900 relative shadow-2xl mb-16">
+            <div class="rounded-[2.5rem] overflow-hidden h-[55vh] bg-slate-900 relative shadow-2xl mb-12">
                 <div class="absolute inset-0 bg-black/40 z-10 flex flex-col justify-center items-center text-white text-center p-6">
-                    <p class="text-t-gold tracking-[0.5em] mb-4 text-sm font-bold uppercase">員林王爺宮 · 乾隆四年創立</p>
-                    <h2 class="text-5xl md:text-6xl font-black mb-6 tracking-widest">三百年香火 · 守護員林</h2>
-                    <p class="text-xl font-light italic opacity-90 leading-relaxed">「中正路上最平靜的一抹線香，是我們與神明最溫柔的對話。」</p>
+                    <h2 class="text-5xl font-black mb-4 tracking-widest">乾隆四年 · 員林王爺宮</h2>
+                    <p class="text-xl italic opacity-90 italic">「香煙飄渺，心靈的永恆家園。」</p>
                 </div>
-                <div class="absolute inset-0 flex items-center justify-center text-gray-700 italic">【ZJ影像 專業作品嵌入區】</div>
+                <div class="absolute inset-0 flex items-center justify-center text-gray-700 italic">【ZJ影像 專業視覺嵌入區】</div>
             </div>
+            <h3 class="text-2xl font-black text-t-blue mb-8 border-l-4 border-t-gold pl-4">目前開放祈福項目</h3>
             <div id="service-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
         </section>
 
-        <section id="history" class="page-section max-w-5xl mx-auto py-10 leading-loose text-justify">
-            <h2 class="text-4xl font-black text-t-blue mb-10 border-l-8 border-t-red pl-6">歷史沿革</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center text-slate-700">
-                <div class="space-y-6">
-                    <p>員林廣寧宮（王爺宮）創建於清乾隆四年（1739年），是員林最古老的宗教信仰中心。當年客家先民帶著三山國王香火渡海來台，於此落地生根。</p>
-                    <p>這座古廟見證了員林從荒蕪到繁華，無論時代如何變遷，它始終是員林人心靈的依歸，也被列為彰化縣定歷史建築。</p>
-                </div>
-                <div class="rounded-3xl h-80 bg-slate-200 border-8 border-white shadow-xl flex items-center justify-center text-gray-400">廣寧宮古蹟全景照片區</div>
-            </div>
-        </section>
-
-        <section id="deity" class="page-section max-w-6xl mx-auto py-10">
-            <h2 class="text-4xl font-black text-center text-t-blue mb-16">奉祀神祇</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <div class="bg-white p-8 rounded-3xl shadow-sm border-t-8 border-t-red">
-                    <h4 class="text-xl font-bold text-t-red mb-3">主祀：三山國王</h4>
-                    <p class="text-sm text-slate-500">巾山、明山、獨山三位國王，保境安民、剛正不阿，是守護員林百年的強大力量。</p>
-                </div>
-                <div class="bg-white p-8 rounded-3xl shadow-sm border-t-8 border-t-gold">
-                    <h4 class="text-xl font-bold text-t-blue mb-3">文昌帝君</h4>
-                    <p class="text-sm text-slate-500">員林考生的守護神，每逢考季神桌上總堆滿准考證，庇佑學子金榜題名。</p>
-                </div>
-                <div class="bg-white p-8 rounded-3xl shadow-sm border-t-8 border-t-blue">
-                    <h4 class="text-xl font-bold text-t-blue mb-3">觀音佛祖</h4>
-                    <p class="text-sm text-slate-500">救苦救難，慈悲普渡。在信眾遇到重大挫折時，提供最寧靜的心靈支持。</p>
-                </div>
-            </div>
+        <section id="news" class="page-section max-w-4xl mx-auto py-10">
+            <h2 class="text-3xl font-black text-t-blue mb-8">最新公告</h2>
+            <div id="news-list" class="space-y-6"></div>
         </section>
 
         <section id="gallery" class="page-section max-w-6xl mx-auto py-10">
-            <h2 class="text-3xl font-black text-t-blue mb-10 text-center">活動花絮照片</h2>
-            <div id="display-photo-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            <h2 class="text-3xl font-black text-t-blue mb-8">活動花絮照片</h2>
+            <div id="photo-wall" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
 
         <section id="video" class="page-section max-w-6xl mx-auto py-10">
-            <h2 class="text-3xl font-black text-t-blue mb-10 text-center">影音專區</h2>
-            <div id="display-video-list" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div>
+            <h2 class="text-3xl font-black text-t-blue mb-8 text-center">影音作品展示</h2>
+            <div id="video-wall" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div>
         </section>
 
         <section id="bless" class="page-section max-w-2xl mx-auto py-10">
             <div class="bg-white p-12 rounded-[3rem] shadow-2xl border-t-8 border-t-gold">
-                <h2 class="text-3xl font-black text-center text-t-gold mb-10 font-serif">線上祈福點燈</h2>
+                <h2 class="text-3xl font-black text-center text-t-gold mb-8">線上祈福登記</h2>
                 <div class="space-y-4">
-                    <input type="text" id="b_name" placeholder="信眾姓名" class="w-full border p-4 rounded-2xl bg-gray-50 outline-none">
-                    <input type="tel" id="b_phone" placeholder="聯絡電話" class="w-full border p-4 rounded-2xl bg-gray-50 outline-none">
-                    <select id="service-select" class="w-full border p-4 rounded-2xl bg-gray-50 font-bold text-t-blue"></select>
-                    <button onclick="submitOrder('點燈')" class="w-full bg-t-gold text-white py-5 rounded-2xl font-black text-xl shadow-lg hover:scale-[1.02] transition">確認登記並前往付款</button>
+                    <input type="text" id="b_name" placeholder="姓名" class="w-full border p-4 rounded-xl outline-none">
+                    <input type="tel" id="b_phone" placeholder="電話" class="w-full border p-4 rounded-xl outline-none">
+                    <select id="service-select" class="w-full border p-4 rounded-xl font-bold"></select>
+                    <button onclick="submitData('點燈')" class="w-full bg-t-gold text-white py-4 rounded-xl font-black">確認登記並前往付款</button>
                 </div>
             </div>
         </section>
 
-        <section id="donate" class="page-section max-w-2xl mx-auto py-10 text-center">
-            <div class="bg-white p-12 rounded-[3rem] shadow-2xl border-t-8 border-t-red">
-                <h2 class="text-3xl font-black text-t-red mb-2">捐獻香油錢</h2>
-                <p class="text-gray-400 italic mb-8">「廣播聖澤，寧靜海疆」</p>
+        <section id="donate" class="page-section max-w-2xl mx-auto py-10">
+            <div class="bg-white p-12 rounded-[3rem] shadow-2xl border-t-8 border-t-red text-center">
+                <h2 class="text-3xl font-black text-t-red mb-8">捐獻香油錢</h2>
                 <div class="space-y-4 text-left">
-                    <input type="number" id="d_amount" placeholder="捐獻金額 (TWD)" class="w-full border-2 border-t-red/20 p-5 rounded-2xl text-3xl font-black text-t-red text-center outline-none">
-                    <input type="text" id="d_name" placeholder="捐獻人姓名" class="w-full border p-4 rounded-2xl bg-gray-50">
-                    <input type="tel" id="d_phone" placeholder="連絡電話" class="w-full border p-4 rounded-2xl bg-gray-50">
-                    <button onclick="submitOrder('捐獻')" class="w-full bg-t-red text-white py-5 rounded-2xl font-black text-xl shadow-lg">確認捐獻</button>
+                    <input type="number" id="d_amount" placeholder="金額 (TWD)" class="w-full border p-5 rounded-xl text-3xl font-black text-center outline-none">
+                    <input type="text" id="d_name" placeholder="姓名" class="w-full border p-4 rounded-xl">
+                    <input type="tel" id="d_phone" placeholder="電話" class="w-full border p-4 rounded-xl">
+                    <button onclick="submitData('捐獻')" class="w-full bg-t-red text-white py-4 rounded-xl font-black">完成捐獻</button>
                 </div>
             </div>
         </section>
-
-        <section id="contact" class="page-section max-w-5xl mx-auto py-10">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div class="space-y-6 text-lg">
-                    <h2 class="text-4xl font-black text-t-blue mb-4">聯絡我們</h2>
-                    <p><i class="fas fa-map-marker-alt text-t-red mr-4"></i> 彰化縣員林市中正路 360 號</p>
-                    <p><i class="fas fa-phone text-t-red mr-4"></i> (04) 832-2615</p>
-                    <div class="flex space-x-6 pt-6">
-                        <a href="https://line.me" class="text-[#00B900] text-3xl transition hover:scale-110"><i class="fab fa-line"></i></a>
-                        <a href="https://facebook.com" class="text-[#1877F2] text-3xl transition hover:scale-110"><i class="fab fa-facebook"></i></a>
-                        <a href="https://instagram.com" class="text-[#E4405F] text-3xl transition hover:scale-110"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <div class="h-64 bg-slate-200 rounded-3xl overflow-hidden shadow-xl border-4 border-white">
-                    <iframe class="w-full h-full" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3648.7!2d120.572!3d23.958!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x34693998!2z5ZOh5p6X5buj5a-n5a6u!5e0!3m2!1szh-TW!2stw!4v1" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                </div>
-            </div>
-        </section>
-
     </main>
 
     <div id="payment-modal" class="fixed inset-0 bg-black/80 z-[60] items-center justify-center p-6">
-        <div class="bg-white rounded-[2.5rem] p-10 max-w-md w-full shadow-2xl text-center">
-            <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl"><i class="fas fa-check"></i></div>
-            <h3 class="text-2xl font-black text-t-blue mb-4">登記資料已送出</h3>
-            <div class="space-y-4 text-left">
-                <div class="bg-slate-50 p-4 rounded-2xl border">
-                    <p class="text-xs font-bold text-slate-400 mb-1">銀行匯款/轉帳</p>
-                    <p class="text-sm font-bold">員林市農會 (600)</p>
-                    <p class="text-lg font-black text-t-red">帳號：XXXX-XXXX-XXXX</p>
-                    <p class="text-[10px] text-gray-400">※ 匯款後請至查詢頁面告知末五碼</p>
-                </div>
-                <button onclick="window.open('https://linepay.com')" class="w-full bg-[#00B900] text-white py-4 rounded-2xl font-bold flex items-center justify-center shadow-lg"><i class="fab fa-line text-2xl mr-2"></i> 使用 LinePay 付款</button>
+        <div class="bg-white rounded-[2.5rem] p-10 max-w-md w-full text-center">
+            <h3 class="text-2xl font-black mb-6">登記成功</h3>
+            <div class="bg-slate-50 p-6 rounded-2xl border mb-6 text-left">
+                <p class="text-xs text-slate-400">銀行轉帳資訊</p>
+                <p class="font-bold">員林市農會 (600)</p>
+                <p class="text-xl font-black text-t-red tracking-widest underline">帳號：XXXX-XXXX-XXXX</p>
             </div>
-            <button onclick="location.reload()" class="mt-8 text-slate-400 underline text-sm">回到首頁</button>
+            <button onclick="location.reload()" class="text-slate-400 underline">回到首頁</button>
         </div>
     </div>
 
@@ -179,42 +123,40 @@
         function showPage(id) {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
         }
 
-        // 同步 點燈項目
+        // --- 同步邏輯 (即時監聽) ---
         db.collection("services").onSnapshot(snap => {
-            let grid = ""; let options = "";
+            let grid = ""; let opts = "";
             snap.forEach(doc => {
                 const s = doc.data();
-                grid += `<div class="bg-white p-8 rounded-3xl shadow-sm border-t-4 border-t-gold text-center"><h4 class="font-bold text-xl mb-2">${s.name}</h4><p class="text-t-red font-black">$${s.price}</p></div>`;
-                options += `<option value="${s.name}">${s.name} ($${s.price})</option>`;
+                grid += `<div class="bg-white p-6 rounded-3xl shadow-sm border-t-4 border-t-gold"><b>${s.name}</b><br><span class="text-t-red font-black">$${s.price}</span></div>`;
+                opts += `<option value="${s.name}">${s.name} ($${s.price})</option>`;
             });
             document.getElementById('service-grid').innerHTML = grid;
-            document.getElementById('service-select').innerHTML = options;
+            document.getElementById('service-select').innerHTML = opts;
         });
 
-        // 同步照片
         db.collection("photos").orderBy("createdAt", "desc").onSnapshot(snap => {
             let html = "";
-            snap.forEach(doc => {
-                const p = doc.data();
-                html += `<div class="rounded-3xl overflow-hidden shadow-lg border-4 border-white"><img src="${p.url}" class="w-full h-64 object-cover"></div>`;
-            });
-            document.getElementById('display-photo-list').innerHTML = html;
+            snap.forEach(doc => { html += `<div class="rounded-3xl overflow-hidden shadow-lg border-4 border-white"><img src="${doc.data().url}" class="w-full h-64 object-cover"></div>`; });
+            document.getElementById('photo-wall').innerHTML = html;
         });
 
-        // 同步影片
         db.collection("videos").orderBy("createdAt", "desc").onSnapshot(snap => {
             let html = "";
-            snap.forEach(doc => {
-                const v = doc.data();
-                html += `<div><div class="aspect-video bg-black rounded-2xl overflow-hidden shadow-xl mb-4"><iframe class="w-full h-full" src="https://www.youtube.com/embed/${v.ytid}" frameborder="0" allowfullscreen></iframe></div><h4 class="font-bold text-t-blue">${v.title}</h4></div>`;
-            });
-            document.getElementById('display-video-list').innerHTML = html;
+            snap.forEach(doc => { const v = doc.data(); html += `<div><div class="aspect-video bg-black rounded-2xl overflow-hidden mb-2"><iframe class="w-full h-full" src="https://www.youtube.com/embed/${v.ytid}"></iframe></div><b>${v.title}</b></div>`; });
+            document.getElementById('video-wall').innerHTML = html;
         });
 
-        async function submitOrder(type) {
+        db.collection("news").orderBy("createdAt", "desc").onSnapshot(snap => {
+            let html = "";
+            snap.forEach(doc => { const n = doc.data(); html += `<div class="bg-white p-6 rounded-2xl border-l-8 border-t-red shadow-sm"><h4 class="font-black text-xl mb-2">${n.title}</h4><p class="text-slate-600">${n.content}</p></div>`; });
+            document.getElementById('news-list').innerHTML = html;
+        });
+
+        async function submitData(type) {
             let data = { category: type, status: "待核帳", year: "2026", createdAt: firebase.firestore.FieldValue.serverTimestamp() };
             if(type === '點燈') {
                 data.name = document.getElementById('b_name').value;
