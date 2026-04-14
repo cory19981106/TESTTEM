@@ -4,30 +4,20 @@
     <meta charset="UTF-8">
     <title>廣寧宮管理系統 | 安全登入</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
 </head>
-<body class="bg-slate-900 flex items-center justify-center min-h-screen">
-
-    <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl w-full max-w-md text-center">
-        <div class="w-16 h-16 bg-[#8B0000] rounded-full flex items-center justify-center text-white font-black mx-auto mb-6 shadow-lg text-2xl">廣</div>
+<body class="bg-slate-900 flex items-center justify-center min-h-screen font-sans">
+    <div class="bg-white p-10 rounded-[3rem] shadow-2xl w-full max-w-md text-center">
+        <div class="w-16 h-16 bg-[#8B0000] rounded-full flex items-center justify-center text-white font-black mx-auto mb-6 text-2xl shadow-lg">廣</div>
         <h2 class="text-2xl font-black text-slate-800 mb-2">管理系統登入</h2>
-        <p class="text-slate-400 text-sm mb-8 uppercase tracking-widest">ZJ AD FILM Secure Login</p>
-        
+        <p class="text-slate-400 text-xs mb-8 uppercase tracking-widest">ZJ AD FILM Secure Portal</p>
         <div class="space-y-4 text-left">
-            <div>
-                <label class="text-xs font-bold text-slate-400 ml-2">管理員帳號 (Email)</label>
-                <input type="email" id="email" class="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none focus:border-blue-500 transition">
-            </div>
-            <div>
-                <label class="text-xs font-bold text-slate-400 ml-2">登入密碼</label>
-                <input type="password" id="password" class="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none focus:border-blue-500 transition">
-            </div>
+            <input type="email" id="email" placeholder="管理員帳號 (Email)" class="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none focus:border-blue-500 transition">
+            <input type="password" id="password" placeholder="密碼" class="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none focus:border-blue-500 transition">
             <button onclick="handleLogin()" id="login-btn" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold shadow-xl hover:bg-black transition">驗證身分</button>
         </div>
     </div>
-
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyB2PuFt4epkjrkEByoSEqcw88eAVuxjB70",
@@ -38,23 +28,17 @@
             appId: "1:164908049871:web:21e77c3bb591de85685eba"
         };
         firebase.initializeApp(firebaseConfig);
-
         async function handleLogin() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const btn = document.getElementById('login-btn');
-
-            btn.disabled = true;
-            btn.innerText = "驗證中...";
-
+            btn.disabled = true; btn.innerText = "驗證中...";
             try {
                 await firebase.auth().signInWithEmailAndPassword(email, password);
-                // 登入成功，跳轉到後台
                 window.location.href = "admin.html";
             } catch (error) {
-                alert("帳號或密碼錯誤：" + error.message);
-                btn.disabled = false;
-                btn.innerText = "驗證身分";
+                alert("登入失敗：" + error.message);
+                btn.disabled = false; btn.innerText = "驗證身分";
             }
         }
     </script>
