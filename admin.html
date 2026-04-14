@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8"><title>廣寧宮後台 | 財務與宮務全功能管理系統</title>
+    <meta charset="UTF-8"><title>廣寧宮後台 | 全功能維護系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -14,77 +14,85 @@
         body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; }
         .admin-panel { display: none; } .admin-panel.active { display: block; }
         .nav-btn.active { @apply bg-slate-800 border-l-4 border-yellow-500 text-white font-bold; }
-        .edit-mode { @apply ring-4 ring-orange-500 bg-orange-50 shadow-inner; }
+        .edit-mode { @apply ring-4 ring-orange-500 bg-orange-50; }
     </style>
 </head>
 <body class="flex min-h-screen">
 
     <aside class="w-64 bg-slate-900 text-slate-400 h-screen sticky top-0 flex flex-col z-50">
-        <div class="p-8 text-center border-b border-slate-800"><h2 class="text-xl font-bold text-yellow-500">廣寧宮管理系統</h2></div>
+        <div class="p-8 text-center border-b border-slate-800"><h2 class="text-xl font-bold text-yellow-500 uppercase">廣寧宮管理</h2></div>
         <nav class="mt-4 flex-1 space-y-1 overflow-y-auto">
             <button onclick="showPanel('orders')" id="btn-orders" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-file-invoice-dollar mr-3"></i> 財務核帳報表</button>
-            <button onclick="showPanel('news')" id="btn-news" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-bullhorn mr-3"></i> 最新消息編輯</button>
+            <button onclick="showPanel('news')" id="btn-news" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-bullhorn mr-3"></i> 最新公告編輯</button>
+            <button onclick="showPanel('products')" id="btn-products" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-box-open mr-3"></i> 文創商品管理</button>
             <button onclick="showPanel('services')" id="btn-services" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-tags mr-3"></i> 祈福項目設定</button>
             <button onclick="showPanel('videos')" id="btn-videos" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-play mr-3"></i> 影音作品管理</button>
-            <button onclick="showPanel('products')" id="btn-products" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-box-open mr-3"></i> 文創商品管理</button>
             <button onclick="showPanel('photos')" id="btn-photos" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-camera mr-3"></i> 照片花絮管理</button>
         </nav>
         <button onclick="firebase.auth().signOut()" class="p-6 border-t border-slate-800 text-xs">登出系統</button>
     </aside>
 
     <main class="flex-1 p-8 overflow-y-auto">
-        <h2 id="main-title" class="text-3xl font-black mb-8 text-slate-800">系統管理</h2>
+        <h2 id="main-title" class="text-3xl font-black mb-8 text-slate-800">管理看板</h2>
 
         <section id="panel-orders" class="admin-panel">
             <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border mb-6 grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
-                <div class="md:col-span-1"><label class="text-[10px] font-bold text-slate-400 block mb-1">姓名或電話</label><input type="text" id="o-search" class="w-full border p-2 rounded-xl text-sm" placeholder="關鍵字..."></div>
-                <div class="md:col-span-1"><label class="text-[10px] font-bold text-slate-400 block mb-1">起始日期</label><input type="date" id="o-start" class="w-full border p-2 rounded-xl text-sm"></div>
-                <div class="md:col-span-1"><label class="text-[10px] font-bold text-slate-400 block mb-1">結束日期</label><input type="date" id="o-end" class="w-full border p-2 rounded-xl text-sm"></div>
+                <div class="md:col-span-1"><label class="text-xs font-bold text-slate-400 block mb-1">姓名/電話搜尋</label><input type="text" id="o-search" class="w-full border p-2 rounded-xl text-sm" placeholder="關鍵字..."></div>
+                <div class="md:col-span-1"><label class="text-xs font-bold text-slate-400 block mb-1">起始日期</label><input type="date" id="o-start" class="w-full border p-2 rounded-xl text-sm"></div>
+                <div class="md:col-span-1"><label class="text-xs font-bold text-slate-400 block mb-1">結束日期</label><input type="date" id="o-end" class="w-full border p-2 rounded-xl text-sm"></div>
                 <button onclick="renderOrders()" class="bg-blue-600 text-white py-2 rounded-xl font-bold shadow-lg text-sm"><i class="fas fa-search mr-2"></i>搜尋篩選</button>
                 <button onclick="exportExcel()" class="bg-green-600 text-white py-2 rounded-xl font-bold shadow-lg text-sm"><i class="fas fa-download mr-2"></i>匯出 Excel</button>
             </div>
-            <div class="bg-white rounded-3xl border overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-50 font-bold text-slate-400"><tr><th class="p-6">日期</th><th class="p-6">類別</th><th class="p-6">信眾/電話</th><th class="p-6 text-right">金額</th><th class="p-6">狀態</th><th class="p-6 text-right">操作</th></tr></thead><tbody id="order-rows" class="divide-y"></tbody></table></div>
+            <div class="bg-white rounded-3xl border overflow-hidden shadow-sm"><table class="w-full text-left text-sm"><thead class="bg-slate-50 font-bold text-slate-400 uppercase"><tr><th class="p-6">日期</th><th class="p-6">類別</th><th class="p-6">信眾資訊</th><th class="p-6">項目</th><th class="p-6 text-right">金額</th><th class="p-6">查帳狀態</th><th class="p-6 text-right">操作</th></tr></thead><tbody id="order-rows" class="divide-y"></tbody></table></div>
         </section>
 
         <section id="panel-news" class="admin-panel">
             <div id="n-form-box" class="bg-white p-8 rounded-[2.5rem] border mb-8 max-w-xl transition-all">
                 <input type="hidden" id="n-id">
-                <h3 class="font-bold text-slate-400 mb-4 text-xs uppercase tracking-widest" id="n-mode">新增最新公告</h3>
+                <h3 id="n-label" class="font-bold text-slate-400 mb-4 text-xs uppercase tracking-widest">發布最新公告</h3>
                 <input type="text" id="n-title" placeholder="公告標題" class="w-full border p-3 rounded-xl mb-4">
                 <textarea id="n-content" placeholder="詳細內容..." class="w-full border p-3 rounded-xl h-32 mb-4"></textarea>
-                <div class="flex gap-2">
-                    <button onclick="saveNews()" id="n-btn" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">確認發布</button>
-                    <button onclick="clearNewsForm()" id="n-cancel" class="hidden px-6 bg-slate-200 py-3 rounded-xl">取消編輯</button>
-                </div>
+                <div class="flex gap-2"><button onclick="saveNews()" id="n-btn" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">確認存檔</button><button onclick="clearNewsForm()" id="n-cancel" class="hidden px-6 bg-slate-200 py-3 rounded-xl">取消編輯</button></div>
             </div>
             <div id="admin-news-list" class="space-y-3 max-w-3xl"></div>
         </section>
 
+        <section id="panel-photos" class="admin-panel">
+            <div class="bg-white p-8 rounded-[2.5rem] border mb-8 max-w-xl">
+                <input type="text" id="p-title" placeholder="照片描述" class="w-full border p-3 rounded-xl mb-4">
+                <input type="file" id="p-file" class="mb-4 text-xs">
+                <div id="p-prog" class="hidden w-full bg-slate-100 h-2 rounded-full mb-4 overflow-hidden"><div id="p-bar" class="bg-blue-600 h-full w-0"></div></div>
+                <button onclick="uploadPhoto()" id="p-btn" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold shadow-xl">開始上傳照片</button>
+            </div>
+            <div id="admin-photo-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+        </section>
+
         <section id="panel-services" class="admin-panel">
-            <div id="s-form-box" class="bg-white p-8 rounded-[2.5rem] border mb-8 max-w-md transition-all">
+            <div id="s-form-box" class="bg-white p-8 rounded-[2.5rem] border mb-8 max-w-md">
                 <input type="hidden" id="s-id">
-                <h3 class="font-bold text-slate-400 mb-4 text-xs uppercase tracking-widest" id="s-mode">新增祈福項目</h3>
-                <input type="text" id="s-name" placeholder="項目名稱" class="w-full border p-3 rounded-xl mb-3">
-                <input type="number" id="s-price" placeholder="金額" class="w-full border p-3 rounded-xl mb-4">
-                <div class="flex gap-2">
-                    <button onclick="saveService()" id="s-btn" class="flex-1 bg-yellow-600 text-white py-3 rounded-xl font-bold">儲存項目</button>
-                    <button onclick="clearServForm()" id="s-cancel" class="hidden px-6 bg-slate-200 py-3 rounded-xl">取消</button>
-                </div>
+                <input type="text" id="s-name" placeholder="項目名稱" class="w-full border p-3 rounded-xl mb-4">
+                <input type="number" id="s-price" placeholder="價格" class="w-full border p-3 rounded-xl mb-4">
+                <div class="flex gap-2"><button onclick="saveService()" id="s-btn" class="flex-1 bg-yellow-600 text-white py-3 rounded-xl font-bold shadow-lg">儲存項目</button><button onclick="clearServForm()" id="s-cancel" class="hidden px-6 bg-slate-200 py-3 rounded-xl">取消</button></div>
             </div>
             <div id="admin-serv-list" class="space-y-2 max-w-xl"></div>
         </section>
 
-        <section id="panel-photos" class="admin-panel">
-            <div class="bg-white p-8 rounded-[2.5rem] border mb-8 max-w-xl">
-                <input type="text" id="p-title" placeholder="照片標題" class="w-full border p-3 rounded-xl mb-4">
-                <input type="file" id="p-file" accept="image/*" class="mb-4 text-xs">
-                <div id="p-prog" class="hidden w-full bg-slate-100 h-2 rounded-full mb-4 overflow-hidden"><div id="p-bar" class="bg-blue-600 h-full w-0"></div></div>
-                <button onclick="uploadPhoto()" class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold">上傳照片</button>
+        <section id="panel-videos" class="admin-panel">
+            <div id="v-form-box" class="bg-white p-8 rounded-[2.5rem] border mb-8 max-w-xl">
+                <input type="hidden" id="v-id"><input type="text" id="v-title" placeholder="影片標題" class="w-full border p-3 rounded-xl mb-4"><input type="text" id="v-ytid" placeholder="YouTube ID (如: dQw4w9WgXcQ)" class="w-full border p-3 rounded-xl mb-6">
+                <div class="flex gap-2"><button onclick="saveVideo()" class="flex-1 bg-red-600 text-white py-4 rounded-xl font-bold shadow-lg">確認發布影音</button></div>
             </div>
-            <div id="admin-photo-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+            <div id="admin-video-list" class="space-y-4 max-w-2xl"></div>
         </section>
-
-        </main>
+        
+        <section id="panel-products" class="admin-panel">
+            <div id="prod-form" class="bg-white p-8 rounded-[2.5rem] border mb-8 max-w-xl transition-all">
+                <input type="hidden" id="prod-id"><input type="text" id="prod-name" placeholder="商品名稱" class="w-full border p-3 rounded-xl mb-4"><input type="number" id="prod-price" placeholder="價格" class="w-full border p-3 rounded-xl mb-4"><input type="file" id="prod-file" class="mb-4 text-xs">
+                <div class="flex gap-2"><button onclick="saveProduct()" id="prod-btn" class="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold shadow-lg">確認存檔</button><button onclick="clearProdForm()" id="prod-cancel" class="hidden px-6 bg-slate-100 rounded-xl font-bold">取消</button></div>
+            </div>
+            <div id="admin-prod-list" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+        </section>
+    </main>
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyB2PuFt4epkjrkEByoSEqcw88eAVuxjB70", authDomain: "testproject-fb870.firebaseapp.com", projectId: "testproject-fb870", storageBucket: "testproject-fb870.firebasestorage.app", messagingSenderId: "164908049871", appId: "1:164908049871:web:21e77c3bb591de85685eba" };
@@ -92,138 +100,136 @@
         const db = firebase.firestore(); const storage = firebase.storage();
         let orders = [];
 
-        firebase.auth().onAuthStateChanged(u => { if(!u) window.location.href="login.html"; else showPanel(localStorage.getItem('admin_tab')||'orders'); });
+        firebase.auth().onAuthStateChanged(u => { if(!u) window.location.href="login.html"; else showPanel(localStorage.getItem('tab')||'orders'); });
 
         function showPanel(id){
             document.querySelectorAll('.admin-panel').forEach(p=>p.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
             document.getElementById('panel-'+id).classList.add('active');
             document.getElementById('btn-'+id).classList.add('active');
-            localStorage.setItem('admin_tab', id);
+            localStorage.setItem('tab', id);
         }
 
-        // --- 1. 財務報表搜尋渲染 ---
+        // --- 1. 財務核帳邏輯 ---
         db.collection("orders").orderBy("createdAt","desc").onSnapshot(snap => { orders = snap.docs.map(d=>({id:d.id, ...d.data()})); renderOrders(); });
         function renderOrders(){
             const s = document.getElementById('o-search').value.toLowerCase();
             const start = document.getElementById('o-start').value;
             const end = document.getElementById('o-end').value;
             let filtered = orders.filter(o => {
-                const ms = o.name.includes(s) || o.phone.includes(s);
-                let md = true;
-                if(start && o.createdAt) md = o.createdAt.toDate() >= new Date(start);
-                if(end && o.createdAt) { let e = new Date(end); e.setHours(23,59,59); md = md && o.createdAt.toDate() <= e; }
-                return ms && md;
+                const matchSearch = o.name.includes(s) || o.phone.includes(s);
+                let matchDate = true;
+                if(start && o.createdAt) matchDate = o.createdAt.toDate() >= new Date(start);
+                if(end && o.createdAt) { let e = new Date(end); e.setHours(23,59,59); matchDate = matchDate && o.createdAt.toDate() <= e; }
+                return matchSearch && matchDate;
             });
             let html = ""; filtered.forEach(o => {
                 const c = o.status==='已查帳';
-                html += `<tr><td class="p-6 text-slate-400 text-xs">${o.createdAt?o.createdAt.toDate().toLocaleDateString():'-'}</td><td class="p-6 font-bold ${o.category==='捐獻'?'text-red-600':'text-blue-600'}">${o.category}</td><td class="p-6"><b>${o.name}</b><br><small>${o.phone}</small></td><td class="p-6 text-right font-black">$${o.amount}</td><td class="p-6 text-center"><button onclick="toggleCheck('${o.id}','${o.status}')" class="px-4 py-1 rounded-full text-[10px] font-bold ${c?'bg-green-100 text-green-600':'bg-yellow-100 text-yellow-600'}">${o.status||'待查帳'}</button></td><td class="p-6 text-right"><button onclick="deleteDoc('orders','${o.id}')" class="text-slate-300 hover:text-red-500"><i class="fas fa-trash"></i></button></td></tr>`;
+                html += `<tr><td class="p-6 text-slate-400 font-mono text-xs">${o.createdAt?o.createdAt.toDate().toLocaleDateString():'-'}</td><td class="p-6 font-bold ${o.category==='捐獻'?'text-red-600':'text-blue-600'}">${o.category}</td><td class="p-6"><b>${o.name}</b><br><small>${o.phone}</small></td><td class="p-6 text-slate-500">${o.item}</td><td class="p-6 text-right font-black">$${o.amount}</td><td class="p-6 text-center"><button onclick="toggleCheck('${o.id}','${o.status}')" class="px-4 py-1 rounded-full text-[10px] font-bold ${c?'bg-green-100 text-green-600 border-green-200':'bg-yellow-100 text-yellow-600 border-yellow-200'}">${o.status||'待查帳'}</button></td><td class="p-6 text-right"><button onclick="deleteDoc('orders','${o.id}')" class="text-slate-300 hover:text-red-500"><i class="fas fa-trash-alt"></i></button></td></tr>`;
             });
-            document.getElementById('order-rows').innerHTML = html;
+            document.getElementById('order-rows').innerHTML = html || '<tr><td colspan="7" class="text-center py-10 text-slate-400">找不到符合條件的報表資料</td></tr>';
         }
         async function toggleCheck(id,s){ await db.collection("orders").doc(id).update({status: s==='已查帳'?'待查帳':'已查帳'}); }
         function exportExcel(){
-            const ws = XLSX.utils.json_to_sheet(orders.map(o=>({"日期":o.createdAt.toDate().toLocaleString(),"類別":o.category,"信眾":o.name,"電話":o.phone,"金額":o.amount,"狀態":o.status})));
-            const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "報表");
+            const ws = XLSX.utils.json_to_sheet(orders.map(o=>({"日期":o.createdAt.toDate().toLocaleString(),"類別":o.category,"姓名":o.name,"電話":o.phone,"金額":o.amount,"狀態":o.status})));
+            const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "財務報表");
             XLSX.writeFile(wb, `廣寧宮財務_${new Date().toLocaleDateString()}.xlsx`);
         }
 
-        // --- 2. 最新消息 CRUD (核心修復) ---
+        // --- 2. 公告編輯與發布 ---
         async function saveNews(){
-            const id = document.getElementById('n-id').value;
-            const title = document.getElementById('n-title').value;
-            const content = document.getElementById('n-content').value;
-            if(!title || !content) return alert("資訊不可為空");
-            if(id) {
-                await db.collection("news").doc(id).update({ title, content, updatedAt: new Date() });
-                alert("已更新公告");
-            } else {
-                await db.collection("news").add({ title, content, createdAt: new Date() });
-                alert("已發布新公告");
-            }
+            const id = document.getElementById('n-id').value; const t = document.getElementById('n-title').value; const c = document.getElementById('n-content').value;
+            if(!t || !c) return alert("資訊不完整");
+            if(id) { await db.collection("news").doc(id).update({title:t, content:c, updatedAt: new Date()}); alert("公告已更新"); }
+            else { await db.collection("news").add({title:t, content:c, createdAt: new Date()}); alert("公告已發布"); }
             clearNewsForm();
         }
         function editNews(id, t, c){
-            document.getElementById('n-id').value = id;
-            document.getElementById('n-title').value = t;
-            document.getElementById('n-content').value = c;
-            document.getElementById('n-form-box').classList.add('edit-mode');
-            document.getElementById('n-mode').innerText = "⚠️ 正在編輯公告模式";
-            document.getElementById('n-cancel').classList.remove('hidden');
-            window.scrollTo({top: 0, behavior: 'smooth'});
+            document.getElementById('n-id').value=id; document.getElementById('n-title').value=t; document.getElementById('n-content').value=c;
+            document.getElementById('n-form-box').classList.add('edit-mode'); document.getElementById('n-cancel').classList.remove('hidden');
+            document.getElementById('n-label').innerText = "⚠️ 正在編輯公告"; window.scrollTo({top: 0, behavior: 'smooth'});
         }
         function clearNewsForm(){
-            document.getElementById('n-id').value = ""; document.getElementById('n-title').value = ""; document.getElementById('n-content').value = "";
-            document.getElementById('n-form-box').classList.remove('edit-mode');
-            document.getElementById('n-mode').innerText = "新增最新公告";
-            document.getElementById('n-cancel').classList.add('hidden');
+            document.getElementById('n-id').value=""; document.getElementById('n-title').value=""; document.getElementById('n-content').value="";
+            document.getElementById('n-form-box').classList.remove('edit-mode'); document.getElementById('n-cancel').classList.add('hidden');
+            document.getElementById('n-label').innerText = "發布最新公告";
         }
         db.collection("news").orderBy("createdAt","desc").onSnapshot(snap => {
             let html = ""; snap.forEach(doc => { 
                 const n = doc.data(); const id = doc.id;
-                const safeContent = n.content.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n');
-                html += `<div class="bg-white p-4 border rounded-xl flex justify-between shadow-sm"><span>📢 ${n.title}</span><div class="flex gap-4"><button onclick="editNews('${id}','${n.title}', \`${safeContent}\` )" class="text-blue-500 text-xs font-bold">編輯</button><button onclick="deleteDoc('news','${id}')" class="text-red-400 text-xs">刪除</button></div></div>`; 
+                const safeC = n.content.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n');
+                html += `<div class="bg-white p-4 border rounded-xl flex justify-between shadow-sm"><span>📢 <b>${n.title}</b></span><div class="flex gap-4"><button onclick="editNews('${id}','${n.title}', \`${safeC}\` )" class="text-blue-500 font-bold text-xs uppercase">編輯</button><button onclick="deleteDoc('news','${id}')" class="text-red-400 font-bold text-xs uppercase">刪除</button></div></div>`; 
             });
             document.getElementById('admin-news-list').innerHTML = html;
         });
 
-        // --- 3. 祈福項目 CRUD (核心修復) ---
+        // --- 3. 祈福項目編輯與儲存 ---
         async function saveService(){
-            const id = document.getElementById('s-id').value;
-            const name = document.getElementById('s-name').value;
-            const price = parseInt(document.getElementById('s-price').value);
-            if(!name || !price) return alert("請輸入完整資料");
-            if(id) {
-                await db.collection("services").doc(id).update({ name, price });
-                alert("項目已更新");
-            } else {
-                await db.collection("services").add({ name, price, createdAt: new Date() });
-                alert("項目已新增");
-            }
+            const id = document.getElementById('s-id').value; const n = document.getElementById('s-name').value; const p = parseInt(document.getElementById('s-price').value);
+            if(!n || !p) return alert("資料不齊全");
+            if(id) { await db.collection("services").doc(id).update({name:n, price:p}); alert("項目已更新"); }
+            else { await db.collection("services").add({name:n, price:p, createdAt: new Date()}); alert("項目已新增"); }
             clearServForm();
         }
         function editServ(id, n, p){
-            document.getElementById('s-id').value = id;
-            document.getElementById('s-name').value = n;
-            document.getElementById('s-price').value = p;
-            document.getElementById('s-form-box').classList.add('edit-mode');
-            document.getElementById('s-cancel').classList.remove('hidden');
-            document.getElementById('s-mode').innerText = "⚠️ 正在編輯項目模式";
+            document.getElementById('s-id').value=id; document.getElementById('s-name').value=n; document.getElementById('s-price').value=p;
+            document.getElementById('s-form-box').classList.add('edit-mode'); document.getElementById('s-cancel').classList.remove('hidden');
         }
         function clearServForm(){
-            document.getElementById('s-id').value = ""; document.getElementById('s-name').value = ""; document.getElementById('s-price').value = "";
-            document.getElementById('s-form-box').classList.remove('edit-mode');
-            document.getElementById('s-cancel').classList.add('hidden');
-            document.getElementById('s-mode').innerText = "新增祈福項目";
+            document.getElementById('s-id').value=""; document.getElementById('s-name').value=""; document.getElementById('s-price').value="";
+            document.getElementById('s-form-box').classList.remove('edit-mode'); document.getElementById('s-cancel').classList.add('hidden');
         }
         db.collection("services").orderBy("createdAt","desc").onSnapshot(snap => {
-            let html = ""; snap.forEach(doc => { 
-                const s = doc.data(); 
-                html += `<div class="bg-white p-4 border rounded-xl flex justify-between"><span><b>${s.name}</b> ($${s.price})</span><div class="flex gap-4"><button onclick="editServ('${doc.id}','${s.name}',${s.price})" class="text-blue-500 font-bold">編輯</button><button onclick="deleteDoc('services','${doc.id}')" class="text-red-400 font-bold">刪除</button></div></div>`; 
-            });
+            let html = ""; snap.forEach(doc => { const s = doc.data(); html += `<div class="bg-white p-4 border rounded-xl flex justify-between"><span><b>${s.name}</b> ($${s.price})</span><div class="flex gap-2"><button onclick="editServ('${doc.id}','${s.name}',${s.price})" class="text-blue-500 text-xs">編輯</button><button onclick="deleteDoc('services','${doc.id}')" class="text-red-400 text-xs">刪除</button></div></div>`; });
             document.getElementById('admin-serv-list').innerHTML = html;
         });
 
-        // --- 4. 照片與影音輔助功能 ---
+        // --- 4. 照片管理 ---
         async function uploadPhoto(){
             const f = document.getElementById('p-file').files[0]; const t = document.getElementById('p-title').value;
-            if(!f || !t) return alert("標題與照片必填");
-            document.getElementById('p-prog').classList.remove('hidden');
+            if(!f || !t) return alert("標題與照片必選");
+            const bar = document.getElementById('p-bar'); document.getElementById('p-prog').classList.remove('hidden');
             const path = `gallery/${Date.now()}_${f.name}`;
             const task = storage.ref(path).put(f);
-            task.on('state_changed', s => { let p = (s.bytesTransferred / s.totalBytes) * 100; document.getElementById('p-bar').style.width = p + '%'; }, null, async () => {
+            task.on('state_changed', s => { let p = (s.bytesTransferred / s.totalBytes) * 100; bar.style.width = p + '%'; }, null, async () => {
                 const url = await task.snapshot.ref.getDownloadURL();
                 await db.collection("photos").add({title:t, url, path, createdAt: new Date()});
                 alert("上傳成功"); location.reload();
             });
         }
         db.collection("photos").orderBy("createdAt","desc").onSnapshot(snap => {
-            let html = ""; snap.forEach(doc => { const p = doc.data(); html += `<div class="relative"><img src="${p.url}" class="h-24 w-full object-cover rounded-lg shadow"><button onclick="deleteDocWithFile('photos','${doc.id}','${p.path}')" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-[10px]">×</button></div>`; });
-            document.getElementById('admin-photo-grid').innerHTML = html;
+            let h = ""; snap.forEach(doc => { const p = doc.data(); h += `<div class="relative bg-white p-2 border rounded-2xl shadow-sm"><img src="${p.url}" class="h-32 w-full object-cover rounded-xl shadow-inner"><button onclick="deleteDocWithFile('photos','${doc.id}','${p.path}')" class="absolute top-4 right-4 bg-red-600 text-white w-6 h-6 rounded-full text-xs shadow-xl">×</button></div>`; });
+            document.getElementById('admin-photo-grid').innerHTML = h;
         });
 
-        async function deleteDoc(c, id){ if(confirm("確定刪除？")) await db.collection(c).doc(id).delete(); }
-        async function deleteDocWithFile(c, id, p){ if(confirm("確定刪除檔案？")) { if(p) try { await storage.ref(p).delete(); } catch(e) {} await db.collection(c).doc(id).delete(); } }
+        // --- 5. 影音與文創商品 CRUD (比照公告與照片邏輯) ---
+        async function saveVideo(){
+            const id = document.getElementById('v-id').value; const t = document.getElementById('v-title').value; const ytid = document.getElementById('v-ytid').value;
+            if(id) await db.collection("videos").doc(id).update({title:t, ytid});
+            else await db.collection("videos").add({title:t, ytid, createdAt: new Date()});
+            alert("成功"); location.reload();
+        }
+        db.collection("videos").orderBy("createdAt","desc").onSnapshot(snap => {
+            let html = ""; snap.forEach(doc => { const v = doc.data(); html += `<div class="bg-white p-4 border rounded-xl flex justify-between items-center shadow-sm"><div><b>${v.title}</b><br><small class="text-slate-400">YouTube ID: ${v.ytid}</small></div><button onclick="deleteDoc('videos','${doc.id}')" class="text-red-400 font-bold">刪除</button></div>`; });
+            document.getElementById('admin-video-list').innerHTML = html;
+        });
+
+        async function saveProduct(){
+            const id = document.getElementById('prod-id').value; const f = document.getElementById('prod-file').files[0];
+            let url = ""; let path = "";
+            if(f){ path=`products/${Date.now()}_${f.name}`; const r = storage.ref(path); await r.put(f); url=await r.getDownloadURL(); }
+            const data = { name: document.getElementById('prod-name').value, price: parseInt(document.getElementById('prod-price').value), updatedAt: new Date() };
+            if(url){ data.url=url; data.path=path; }
+            if(id) await db.collection("products").doc(id).update(data); else await db.collection("products").add({...data, createdAt: new Date()});
+            location.reload();
+        }
+        db.collection("products").orderBy("createdAt","desc").onSnapshot(snap => {
+            let html = ""; snap.forEach(doc => { const p = doc.data(); html += `<div class="bg-white p-4 border rounded-3xl shadow-sm text-center"><img src="${p.url}" class="h-32 w-full object-cover rounded-2xl mb-2"><b class="text-sm">${p.name}</b><div class="flex gap-2 mt-2"><button onclick="deleteDocWithFile('products','${doc.id}','${p.path}')" class="text-red-400 text-xs w-full font-bold">刪除商品</button></div></div>`; });
+            document.getElementById('admin-prod-list').innerHTML = html;
+        });
+
+        async function deleteDoc(c, id){ if(confirm("確定要刪除這筆資料嗎？此動作不可復原。")) await db.collection(c).doc(id).delete(); }
+        async function deleteDocWithFile(c, id, p){ if(confirm("將同步刪除圖檔與資料，確定嗎？")) { if(p) try { await storage.ref(p).delete(); } catch(e) {} await db.collection(c).doc(id).delete(); } }
     </script>
 </body>
 </html>
