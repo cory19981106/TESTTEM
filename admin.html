@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8"><title>廣寧宮後台 | 全方位宮務管理系統</title>
+    <meta charset="UTF-8"><title>廣寧宮後台 | 全功能管理系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -11,107 +11,142 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f1f5f9; }
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; }
         .admin-panel { display: none; } .admin-panel.active { display: block; }
-        .nav-btn.active { @apply bg-[#1e293b] border-l-4 border-yellow-500 text-white font-bold; }
-        .edit-mode { border: 4px solid #f97316 !important; background-color: #fff7ed; }
+        .nav-btn.active { @apply bg-slate-800 border-l-4 border-yellow-500 text-white font-bold; }
+        .edit-mode { @apply ring-4 ring-orange-400 bg-orange-50 transition-all; }
     </style>
 </head>
 <body class="flex min-h-screen">
 
     <aside class="w-64 bg-slate-900 text-slate-400 h-screen sticky top-0 flex flex-col z-50">
-        <div class="p-8 text-center border-b border-slate-800"><h2 class="text-xl font-bold text-yellow-500">廣寧宮管理</h2></div>
-        <nav class="mt-4 flex-1 overflow-y-auto space-y-1">
-            <button onclick="showPanel('orders')" id="btn-orders" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-file-invoice mr-3"></i> 財務核帳報表</button>
-            <button onclick="showPanel('products')" id="btn-products" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-store mr-3"></i> 文創商品管理</button>
+        <div class="p-8 text-center border-b border-slate-800"><h2 class="text-xl font-bold text-yellow-500 uppercase">廣寧宮管理</h2></div>
+        <nav class="mt-4 flex-1 space-y-1 overflow-y-auto">
+            <button onclick="showPanel('orders')" id="btn-orders" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-file-invoice-dollar mr-3"></i> 財務核帳報表</button>
+            <button onclick="showPanel('news')" id="btn-news" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-bullhorn mr-3"></i> 最新消息編輯</button>
+            <button onclick="showPanel('products')" id="btn-products" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-box-open mr-3"></i> 文創商品管理</button>
             <button onclick="showPanel('services')" id="btn-services" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-tags mr-3"></i> 祈福項目設定</button>
-            <button onclick="showPanel('news')" id="btn-news" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-bullhorn mr-3"></i> 最新消息</button>
-            <button onclick="showPanel('photos')" id="btn-photos" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-camera mr-3"></i> 照片管理</button>
+            <button onclick="showPanel('videos')" id="btn-videos" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-play mr-3"></i> 影音作品管理</button>
+            <button onclick="showPanel('photos')" id="btn-photos" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-camera mr-3"></i> 照片花絮管理</button>
         </nav>
-        <button onclick="firebase.auth().signOut()" class="p-8 border-t border-slate-800 text-xs">登出系統</button>
+        <button onclick="firebase.auth().signOut()" class="p-6 border-t border-slate-800 text-xs">登出系統</button>
     </aside>
 
-    <main class="flex-1 p-10 overflow-y-auto">
-        <h2 id="main-title" class="text-3xl font-black mb-8 text-slate-800">管理系統</h2>
+    <main class="flex-1 p-8 overflow-y-auto">
+        <h2 id="main-title" class="text-3xl font-black mb-8 text-slate-800 italic">管理系統</h2>
 
-        <section id="panel-orders" class="admin-panel active"></section>
-
-        <section id="panel-products" class="admin-panel">
-            <div id="product-form" class="bg-white p-8 rounded-[2rem] border mb-8 max-w-xl transition-all">
-                <input type="hidden" id="prod-id">
-                <input type="text" id="prod-name" placeholder="商品名稱" class="w-full border p-3 rounded-xl mb-4">
-                <input type="number" id="prod-price" placeholder="價格" class="w-full border p-3 rounded-xl mb-4">
-                <input type="file" id="prod-file" class="mb-4 text-xs">
-                <div class="flex gap-2">
-                    <button onclick="saveProduct()" id="prod-btn" class="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold">確認發布</button>
-                    <button onclick="clearProductForm()" id="prod-cancel" class="hidden px-6 bg-slate-200 rounded-xl font-bold">取消</button>
-                </div>
+        <section id="panel-orders" class="admin-panel">
+            <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border mb-6 grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
+                <div class="md:col-span-1"><label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">信眾姓名/電話</label><input type="text" id="o-search" class="w-full border p-2 rounded-xl text-sm outline-none"></div>
+                <div class="md:col-span-1"><label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">起始日期</label><input type="date" id="o-start" class="w-full border p-2 rounded-xl text-sm"></div>
+                <div class="md:col-span-1"><label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">結束日期</label><input type="date" id="o-end" class="w-full border p-2 rounded-xl text-sm"></div>
+                <button onclick="renderOrders()" class="bg-blue-600 text-white py-2 rounded-xl font-bold shadow-md text-sm"><i class="fas fa-search mr-2"></i>搜尋篩選</button>
+                <button onclick="exportExcel()" class="bg-green-600 text-white py-2 rounded-xl font-bold shadow-md text-sm"><i class="fas fa-file-excel mr-2"></i>匯出 EXCEL</button>
             </div>
-            <div id="admin-product-list" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+            <div class="bg-white rounded-3xl border overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-50 font-bold text-slate-400"><tr><th class="p-6">日期</th><th class="p-6">類別</th><th class="p-6">信眾/電話</th><th class="p-6">項目</th><th class="p-6 text-right">金額</th><th class="p-6">狀態</th><th class="p-6 text-right">操作</th></tr></thead><tbody id="order-rows" class="divide-y"></tbody></table></div>
         </section>
 
-        <section id="panel-services" class="admin-panel"></section>
+        <section id="panel-products" class="admin-panel">
+            <div id="prod-form" class="bg-white p-8 rounded-[2.5rem] border mb-8 max-w-xl transition-all">
+                <input type="hidden" id="prod-id"><input type="text" id="prod-name" placeholder="商品名稱" class="w-full border p-3 rounded-xl mb-3"><input type="number" id="prod-price" placeholder="價格" class="w-full border p-3 rounded-xl mb-4"><input type="file" id="prod-file" class="text-xs mb-4">
+                <div class="flex gap-2"><button onclick="saveProduct()" id="prod-btn" class="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold shadow-lg">確認存檔</button><button onclick="clearProdForm()" id="prod-cancel" class="hidden px-6 bg-slate-100 rounded-xl">取消</button></div>
+            </div>
+            <div id="admin-prod-list" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+        </section>
 
-    </main>
+        <section id="panel-news" class="admin-panel">
+            <div id="news-form" class="bg-white p-8 rounded-[2.5rem] border mb-8 max-w-xl transition-all">
+                <input type="hidden" id="news-id"><input type="text" id="news-title" placeholder="公告標題" class="w-full border p-3 rounded-xl mb-3"><textarea id="news-content" placeholder="詳細全文..." class="w-full border p-3 rounded-xl h-48 mb-4 outline-none"></textarea>
+                <div class="flex gap-2"><button onclick="saveNews()" id="news-btn" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg">發布公告</button><button onclick="clearNewsForm()" id="news-cancel" class="hidden px-6 bg-slate-100 rounded-xl">取消</button></div>
+            </div>
+            <div id="admin-news-list" class="space-y-4 max-w-3xl"></div>
+        </section>
+
+        <section id="panel-services" class="admin-panel">
+            <div id="serv-form" class="bg-white p-8 rounded-[2.5rem] border mb-8 max-w-md transition-all">
+                <input type="hidden" id="serv-id"><input type="text" id="serv-name" placeholder="祈福名稱" class="w-full border p-3 rounded-xl mb-3"><input type="number" id="serv-price" placeholder="價格" class="w-full border p-3 rounded-xl mb-4">
+                <div class="flex gap-2"><button onclick="saveService()" id="serv-btn" class="flex-1 bg-yellow-600 text-white py-3 rounded-xl font-bold shadow-lg">儲存項目</button><button onclick="clearServForm()" id="serv-cancel" class="hidden px-6 bg-slate-100 rounded-xl">取消</button></div>
+            </div>
+            <div id="admin-serv-list" class="space-y-2 max-w-xl"></div>
+        </section>
+        
+        </main>
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyB2PuFt4epkjrkEByoSEqcw88eAVuxjB70", authDomain: "testproject-fb870.firebaseapp.com", projectId: "testproject-fb870", storageBucket: "testproject-fb870.firebasestorage.app", messagingSenderId: "164908049871", appId: "1:164908049871:web:21e77c3bb591de85685eba" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore(); const storage = firebase.storage();
+        let orders = [];
 
-        firebase.auth().onAuthStateChanged(user => { if(!user) window.location.href="login.html"; else showPanel(localStorage.getItem('tab')||'orders'); });
+        firebase.auth().onAuthStateChanged(u => { if(!u) window.location.href="login.html"; else showPanel(localStorage.getItem('tab_id')||'orders'); });
 
-        function showPanel(id){ document.querySelectorAll('.admin-panel').forEach(p=>p.classList.remove('active')); document.getElementById('panel-'+id).classList.add('active'); localStorage.setItem('tab', id); }
+        function showPanel(id){
+            document.querySelectorAll('.admin-panel').forEach(p=>p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+            document.getElementById('panel-'+id).classList.add('active');
+            document.getElementById('btn-'+id).classList.add('active');
+            localStorage.setItem('tab_id', id);
+            const t = {'orders':'財務核帳報表','news':'最新消息管理','products':'文創商品管理','services':'祈福項目設定','videos':'影音作品','photos':'照片管理'};
+            document.getElementById('main-title').innerText = t[id];
+        }
+
+        // --- 財務報表搜尋與渲染 ---
+        db.collection("orders").orderBy("createdAt","desc").onSnapshot(snap => { orders = snap.docs.map(d=>({id:d.id, ...d.data()})); renderOrders(); });
+        function renderOrders(){
+            const s = document.getElementById('o-search').value.toLowerCase();
+            const start = document.getElementById('o-start').value;
+            const end = document.getElementById('o-end').value;
+            let filtered = orders.filter(o => {
+                const ms = o.name.includes(s) || o.phone.includes(s);
+                let md = true;
+                if(start && o.createdAt) md = o.createdAt.toDate() >= new Date(start);
+                if(end && o.createdAt) { let e = new Date(end); e.setHours(23,59,59); md = md && o.createdAt.toDate() <= e; }
+                return ms && md;
+            });
+            let html = ""; filtered.forEach(o => {
+                const c = o.status==='已查帳';
+                html += `<tr><td class="p-6 text-slate-400 font-mono text-xs">${o.createdAt?o.createdAt.toDate().toLocaleDateString():'-'}</td><td class="p-6 font-bold ${o.category==='捐獻'?'text-red-600':'text-blue-600'}">${o.category}</td><td class="p-6"><b>${o.name}</b><br><small>${o.phone}</small></td><td class="p-6 text-slate-500">${o.item}</td><td class="p-6 text-right font-black">$${o.amount}</td><td class="p-6 text-center"><button onclick="toggleCheck('${o.id}','${o.status}')" class="px-4 py-1 rounded-full text-[10px] font-bold ${c?'bg-green-100 text-green-600':'bg-yellow-100 text-yellow-600'}">${o.status||'待查帳'}</button></td><td class="p-6 text-right"><button onclick="deleteDoc('orders','${o.id}')" class="text-slate-200 hover:text-red-500"><i class="fas fa-trash-alt"></i></button></td></tr>`;
+            });
+            document.getElementById('order-rows').innerHTML = html;
+        }
+        async function toggleCheck(id,s){ await db.collection("orders").doc(id).update({status: s==='已查帳'?'待查帳':'已查帳'}); }
+        function exportExcel(){
+            const ws = XLSX.utils.json_to_sheet(orders.map(o=>({"日期":o.createdAt.toDate().toLocaleString(),"類別":o.category,"姓名":o.name,"電話":o.phone,"金額":o.amount,"狀態":o.status})));
+            const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "報表");
+            XLSX.writeFile(wb, `廣寧宮財務_${new Date().toLocaleDateString()}.xlsx`);
+        }
 
         // --- 文創商品 CRUD ---
-        async function saveProduct() {
-            const id = document.getElementById('prod-id').value;
-            const name = document.getElementById('prod-name').value;
-            const price = document.getElementById('prod-price').value;
-            const file = document.getElementById('prod-file').files[0];
-            
-            let url = ""; let path = "";
-            if(file) {
-                path = `products/${Date.now()}_${file.name}`;
-                const ref = storage.ref(path);
-                await ref.put(file);
-                url = await ref.getDownloadURL();
-            }
-
-            const data = { name, price: parseInt(price), updatedAt: new Date() };
-            if(url) { data.url = url; data.path = path; }
-
-            if(id) await db.collection("products").doc(id).update(data);
-            else await db.collection("products").add({...data, createdAt: new Date()});
-            
-            alert("成功"); location.reload();
+        async function saveProduct(){
+            const id = document.getElementById('prod-id').value; const f = document.getElementById('prod-file').files[0];
+            let url="", path=""; if(f){ path=`products/${Date.now()}_${f.name}`; const r = storage.ref(path); await r.put(f); url=await r.getDownloadURL(); }
+            const data = { name: document.getElementById('prod-name').value, price: parseInt(document.getElementById('prod-price').value), updatedAt: new Date() };
+            if(url){ data.url=url; data.path=path; }
+            if(id) await db.collection("products").doc(id).update(data); else await db.collection("products").add({...data, createdAt: new Date()});
+            location.reload();
         }
-
-        db.collection("products").orderBy("createdAt", "desc").onSnapshot(snap => {
-            let html = ""; snap.forEach(doc => {
-                const p = doc.data();
-                html += `<div class="bg-white p-4 rounded-3xl border shadow-sm">
-                    <img src="${p.url}" class="w-full h-32 object-cover rounded-2xl mb-4">
-                    <b class="text-sm">${p.name}</b>
-                    <div class="flex gap-2 mt-2">
-                        <button onclick="editProduct('${doc.id}', '${p.name}', ${p.price})" class="text-blue-500 text-xs font-bold">編輯</button>
-                        <button onclick="deleteDocWithFile('products', '${doc.id}', '${p.path}')" class="text-red-500 text-xs font-bold">刪除</button>
-                    </div>
-                </div>`;
-            });
-            document.getElementById('admin-product-list').innerHTML = html;
+        db.collection("products").orderBy("createdAt","desc").onSnapshot(snap => {
+            let html = ""; snap.forEach(doc => { const p = doc.data(); html += `<div class="bg-white p-4 rounded-3xl border shadow-sm"><img src="${p.url}" class="h-32 w-full object-cover rounded-2xl mb-4"><b>${p.name}</b><div class="flex gap-2 mt-2"><button onclick="editProd('${doc.id}','${p.name}',${p.price})" class="text-blue-500 text-xs font-bold">編輯</button><button onclick="deleteDocWithFile('products','${doc.id}','${p.path}')" class="text-red-500 text-xs font-bold">刪除</button></div></div>`; });
+            document.getElementById('admin-prod-list').innerHTML = html;
         });
 
-        function editProduct(id, n, p) {
-            document.getElementById('prod-id').value = id;
-            document.getElementById('prod-name').value = n;
-            document.getElementById('prod-price').value = p;
-            document.getElementById('product-form').classList.add('edit-mode');
-            document.getElementById('prod-cancel').classList.remove('hidden');
-            window.scrollTo(0,0);
+        // --- 最新消息 CRUD ---
+        async function saveNews(){
+            const id = document.getElementById('news-id').value; const t = document.getElementById('news-title').value; const c = document.getElementById('news-content').value;
+            if(id) await db.collection("news").doc(id).update({title:t, content:c, updatedAt: new Date()});
+            else await db.collection("news").add({title:t, content:c, createdAt: new Date()});
+            clearNewsForm();
         }
+        db.collection("news").orderBy("createdAt","desc").onSnapshot(snap => {
+            let html = ""; snap.forEach(doc => { const n = doc.data(); html += `<div class="bg-white p-4 rounded-xl border flex justify-between"><span>📢 ${n.title}</span><div class="flex gap-4"><button onclick="editNews('${doc.id}','${n.title}',\`${n.content}\`)" class="text-blue-500 font-bold text-xs">編輯</button><button onclick="deleteDoc('news','${doc.id}')" class="text-red-400 font-bold text-xs">刪除</button></div></div>`; });
+            document.getElementById('admin-news-list').innerHTML = html;
+        });
 
-        async function deleteDocWithFile(col, id, path) { if(confirm("確定刪除？實體檔案也會消失。")) { if(path) try { await storage.ref(path).delete(); } catch(e) {} await db.collection(col).doc(id).delete(); } }
+        // 通用輔助
+        function editNews(id,t,c){ document.getElementById('news-id').value=id; document.getElementById('news-title').value=t; document.getElementById('news-content').value=c; document.getElementById('news-form').classList.add('edit-mode'); document.getElementById('news-cancel').classList.remove('hidden'); }
+        function clearNewsForm(){ document.getElementById('news-id').value=""; document.getElementById('news-title').value=""; document.getElementById('news-content').value=""; document.getElementById('news-form').classList.remove('edit-mode'); document.getElementById('news-cancel').classList.add('hidden'); }
+        async function deleteDoc(c, id){ if(confirm("確定刪除？")) await db.collection(c).doc(id).delete(); }
+        async function deleteDocWithFile(c, id, p){ if(confirm("將同步刪除圖檔，確定嗎？")) { try { await storage.ref(p).delete(); } catch(e) {} await db.collection(c).doc(id).delete(); } }
     </script>
 </body>
 </html>
