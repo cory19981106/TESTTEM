@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8"><title>廣寧宮後台 | ZJ影像系統</title>
+    <meta charset="UTF-8"><title>廣寧宮後台 | 專業管理系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -9,70 +9,72 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-storage-compat.js"></script>
     <style>
-        .admin-panel { display: none; } .admin-panel.active { display: block; animation: fadeIn 0.4s ease; }
+        .admin-panel { display: none; } .admin-panel.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .nav-btn.active { @apply bg-slate-800 border-l-4 border-[#D4AF37] text-white font-bold; }
-        .edit-mode { @apply border-4 border-orange-400 bg-orange-50; }
+        .nav-btn.active { background-color: #1e293b; border-left: 4px solid #D4AF37; color: white; font-weight: bold; }
+        .edit-mode { border: 3px solid #f97316 !important; background-color: #fffaf0; }
     </style>
 </head>
-<body class="flex min-h-screen bg-slate-100">
+<body class="bg-slate-100 flex min-h-screen">
 
-    <aside class="w-64 bg-slate-900 text-slate-400 h-screen sticky top-0 flex flex-col z-50">
+    <aside class="w-64 bg-slate-900 text-slate-400 h-screen sticky top-0 flex flex-col shadow-2xl z-50">
         <div class="p-8 text-center border-b border-slate-800"><h2 class="text-xl font-bold text-yellow-500">廣寧宮管理</h2></div>
-        <nav class="mt-4 flex-1 overflow-y-auto">
-            <button onclick="showPanel('about')" id="btn-about" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-history mr-3"></i> 關於本宮沿革</button>
-            <button onclick="showPanel('deity')" id="btn-deity" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-pray mr-3"></i> 奉祀神明管理</button>
-            <button onclick="showPanel('photos')" id="btn-photos" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-camera mr-3"></i> 照片花絮管理</button>
-            <button onclick="showPanel('videos')" id="btn-videos" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-video mr-3"></i> 影音作品管理</button>
-            <button onclick="showPanel('services')" id="btn-services" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-tags mr-3"></i> 祈福項目設定</button>
-            <button onclick="showPanel('news')" id="btn-news" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-bullhorn mr-3"></i> 最新消息公告</button>
-            <button onclick="showPanel('orders')" id="btn-orders" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-receipt mr-3"></i> 訂單核帳查詢</button>
+        <nav class="mt-4 flex-1 space-y-1">
+            <button onclick="showPanel('orders')" id="btn-orders" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-list-check mr-3"></i> 訂單核帳</button>
+            <button onclick="showPanel('news')" id="btn-news" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-bullhorn mr-3"></i> 公告消息</button>
+            <button onclick="showPanel('photos')" id="btn-photos" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-camera mr-3"></i> 照片管理</button>
+            <button onclick="showPanel('videos')" id="btn-videos" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-video mr-3"></i> 影音管理</button>
+            <button onclick="showPanel('services')" id="btn-services" class="nav-btn w-full text-left px-8 py-4"><i class="fas fa-tags mr-3"></i> 項目設定</button>
         </nav>
-        <button onclick="firebase.auth().signOut()" class="p-6 border-t border-slate-800 text-xs hover:text-white">登出系統</button>
+        <button onclick="firebase.auth().signOut()" class="p-6 text-xs border-t border-slate-800">登出系統</button>
     </aside>
 
     <main class="flex-1 p-10 overflow-y-auto">
-        <h2 id="main-title" class="text-3xl font-black mb-8 text-slate-800">管理面板</h2>
+        <h2 id="main-title" class="text-3xl font-black mb-8">正在載入系統...</h2>
 
-        <section id="panel-about" class="admin-panel">
-            <div class="bg-white p-8 rounded-[2rem] shadow-sm border max-w-3xl">
-                <textarea id="about-text" class="w-full border p-4 rounded-2xl h-80 outline-none mb-4" placeholder="在此輸入宮廟沿革..."></textarea>
-                <button onclick="saveAbout()" class="bg-blue-600 text-white px-10 py-3 rounded-xl font-bold">更新官網內容</button>
-            </div>
-        </section>
-
-        <section id="panel-deity" class="admin-panel">
-            <div id="d-form" class="bg-white p-8 rounded-[2rem] shadow-sm border mb-8 max-w-xl">
-                <input type="hidden" id="d-id">
-                <input type="text" id="d-name" placeholder="神明名稱" class="w-full border p-3 rounded-xl mb-3">
-                <textarea id="d-info" placeholder="神祇介紹..." class="w-full border p-3 rounded-xl h-24 mb-3"></textarea>
-                <input type="file" id="d-file" class="mb-4 text-xs">
+        <section id="panel-news" class="admin-panel">
+            <div id="n-form" class="bg-white p-8 rounded-[2rem] border mb-8 max-w-xl">
+                <input type="hidden" id="n-id">
+                <input type="text" id="n-title" placeholder="公告標題" class="w-full border p-3 rounded-xl mb-3 outline-none">
+                <textarea id="n-content" placeholder="內容細節..." class="w-full border p-3 rounded-xl h-32 mb-4 outline-none"></textarea>
                 <div class="flex gap-2">
-                    <button onclick="saveDeity()" id="d-btn" class="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold">確認發布</button>
-                    <button onclick="clearDeityForm()" id="d-cancel" class="hidden px-6 bg-slate-200 py-3 rounded-xl">取消</button>
+                    <button onclick="saveNews()" id="n-btn" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">確認發布</button>
+                    <button onclick="clearNewsForm()" id="n-cancel" class="hidden px-6 bg-slate-200 py-3 rounded-xl">取消編輯</button>
                 </div>
             </div>
-            <div id="admin-deity-list" class="grid grid-cols-2 md:grid-cols-3 gap-6"></div>
+            <div id="admin-news-list" class="space-y-4 max-w-3xl"></div>
         </section>
 
         <section id="panel-photos" class="admin-panel">
-            <div class="bg-white p-8 rounded-[2rem] shadow-sm border mb-8 max-w-xl">
-                <input type="text" id="p-title" placeholder="活動標題" class="w-full border p-3 rounded-xl mb-3">
-                <input type="file" id="p-file" class="mb-4 text-xs">
-                <div id="p-prog" class="hidden w-full bg-slate-100 h-2 rounded-full mb-4"><div id="p-bar" class="bg-blue-600 h-full w-0"></div></div>
-                <button onclick="uploadPhoto()" id="p-btn" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold">上傳照片</button>
+            <div class="bg-white p-8 rounded-[2rem] border mb-8 max-w-xl">
+                <input type="text" id="p-title" placeholder="照片描述" class="w-full border p-3 rounded-xl mb-4 outline-none">
+                <input type="file" id="p-file" class="text-xs mb-4">
+                <div id="p-prog" class="hidden w-full bg-slate-100 h-2 rounded-full mb-4 overflow-hidden"><div id="p-bar" class="bg-blue-600 h-full w-0"></div></div>
+                <button onclick="uploadPhoto()" id="p-btn" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold">開始上傳</button>
             </div>
-            <div id="admin-photo-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+            <div id="admin-photo-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
         </section>
 
-        <section id="panel-orders" class="admin-panel">
-            <div class="bg-white rounded-3xl border shadow-sm overflow-hidden">
+        <section id="panel-services" class="admin-panel">
+            <div id="s-form" class="bg-white p-8 rounded-[2rem] border mb-8 max-w-md">
+                <input type="hidden" id="s-id">
+                <div class="space-y-4">
+                    <input type="text" id="s-name" placeholder="項目名稱" class="w-full border p-3 rounded-xl">
+                    <input type="number" id="s-price" placeholder="價格" class="w-full border p-3 rounded-xl">
+                    <div class="flex gap-2">
+                        <button onclick="saveService()" id="s-save-btn" class="flex-1 bg-yellow-600 text-white py-3 rounded-xl font-bold">儲存項目</button>
+                        <button onclick="clearServiceForm()" id="s-cancel-btn" class="hidden px-6 bg-slate-200 py-3 rounded-xl">取消</button>
+                    </div>
+                </div>
+            </div>
+            <div id="admin-service-list" class="max-w-xl space-y-2"></div>
+        </section>
+
+        <section id="panel-orders" class="admin-panel active">
+            <div id="admin-orders-list" class="bg-white rounded-3xl border overflow-hidden">
                 <table class="w-full text-left text-sm"><thead class="bg-slate-50 font-bold"><tr><th class="p-6">類別</th><th class="p-6">信眾</th><th class="p-6">項目</th><th class="p-6">金額</th><th class="p-6 text-right">操作</th></tr></thead><tbody id="order-rows" class="divide-y"></tbody></table>
             </div>
         </section>
-        
-        <section id="panel-services" class="admin-panel"><div id="admin-service-list" class="space-y-2"></div></section>
-        <section id="panel-news" class="admin-panel"><div id="admin-news-list" class="space-y-4"></div></section>
     </main>
 
     <script>
@@ -80,7 +82,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore(); const storage = firebase.storage(); const auth = firebase.auth();
 
-        auth.onAuthStateChanged(user => { if(!user) window.location.href="login.html"; else { showPanel(localStorage.getItem('activeTab') || 'about'); } });
+        auth.onAuthStateChanged(user => { if (!user) window.location.href = "login.html"; else { showPanel(localStorage.getItem('activeTab') || 'orders'); } });
 
         function showPanel(id) {
             document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
@@ -88,39 +90,39 @@
             document.getElementById('panel-'+id).classList.add('active');
             document.getElementById('btn-'+id).classList.add('active');
             localStorage.setItem('activeTab', id);
+            const titles = {'orders':'訂單核帳','news':'最新公告消息','photos':'照片花絮','videos':'影音紀錄','services':'祈福項目設定'};
+            document.getElementById('main-title').innerText = titles[id];
         }
 
-        // --- 核心 CRUD 與即時同步功能 ---
+        // --- 通用 CRUD 與即時同步功能 ---
         
-        // 歷史沿革
-        async function saveAbout() { await db.collection("settings").doc("about").set({ content: document.getElementById('about-text').value }); alert("已存檔"); }
-        db.collection("settings").doc("about").onSnapshot(doc => { if(doc.exists) document.getElementById('about-text').value = doc.data().content; });
-
-        // 神明管理
-        async function saveDeity() {
-            const id = document.getElementById('d-id').value; const file = document.getElementById('d-file').files[0];
-            let url = ""; let path = "";
-            if(file) { path = `deities/${Date.now()}_${file.name}`; const ref = storage.ref(path); await ref.put(file); url = await ref.getDownloadURL(); }
-            const data = { name: document.getElementById('d-name').value, info: document.getElementById('d-info').value };
-            if(url) { data.url = url; data.path = path; }
-            if(id) await db.collection("deities").doc(id).update(data);
-            else await db.collection("deities").add({ ...data, createdAt: new Date() });
-            location.reload();
+        // 消息管理
+        async function saveNews() {
+            const id = document.getElementById('n-id').value; const title = document.getElementById('n-title').value; const content = document.getElementById('n-content').value;
+            const data = { title, content, updatedAt: new Date() };
+            if(id) await db.collection("news").doc(id).update(data);
+            else await db.collection("news").add({ ...data, createdAt: new Date() });
+            clearNewsForm();
         }
-
-        db.collection("deities").orderBy("createdAt", "desc").onSnapshot(snap => {
-            let html = ""; snap.forEach(doc => {
-                const d = doc.data();
-                html += `<div class="bg-white p-4 rounded-3xl border"><img src="${d.url}" class="h-32 w-full object-cover rounded-2xl mb-2"><b>${d.name}</b><div class="flex gap-2 mt-2"><button onclick="deleteDoc('deities','${doc.id}','${d.path}')" class="text-red-500 text-xs font-bold">刪除</button></div></div>`;
-            });
-            document.getElementById('admin-deity-list').innerHTML = html;
+        function editNews(id, title, content) {
+            document.getElementById('n-id').value = id; document.getElementById('n-title').value = title; document.getElementById('n-content').value = content;
+            document.getElementById('n-form').classList.add('edit-mode'); document.getElementById('n-cancel').classList.remove('hidden');
+        }
+        function clearNewsForm() {
+            document.getElementById('n-id').value = ""; document.getElementById('n-title').value = ""; document.getElementById('n-content').value = "";
+            document.getElementById('n-form').classList.remove('edit-mode'); document.getElementById('n-cancel').classList.add('hidden');
+        }
+        db.collection("news").orderBy("createdAt", "desc").onSnapshot(snap => {
+            let html = ""; snap.forEach(doc => { const n = doc.data(); html += `<div class="bg-white p-6 rounded-2xl border flex justify-between"><div><b class="text-lg">${n.title}</b></div><div class="flex gap-4"><button onclick="editNews('${doc.id}','${n.title}',\`${n.content}\`)" class="text-blue-500 font-bold">編輯</button><button onclick="deleteDoc('news','${doc.id}')" class="text-red-400">刪除</button></div></div>`; });
+            document.getElementById('admin-news-list').innerHTML = html;
         });
 
-        // 照片管理
+        // 照片管理 (含檔案刪除)
         async function uploadPhoto() {
             const file = document.getElementById('p-file').files[0]; const title = document.getElementById('p-title').value;
-            if(!file) return; const path = `gallery/${Date.now()}_${file.name}`;
+            if(!file) return alert("請選檔案");
             document.getElementById('p-prog').classList.remove('hidden');
+            const path = `gallery/${Date.now()}_${file.name}`;
             const task = storage.ref(path).put(file);
             task.on('state_changed', s => document.getElementById('p-bar').style.width = (s.bytesTransferred/s.totalBytes)*100+'%', null, async () => {
                 const url = await task.snapshot.ref.getDownloadURL();
@@ -128,25 +130,40 @@
                 location.reload();
             });
         }
-
         db.collection("photos").orderBy("createdAt", "desc").onSnapshot(snap => {
-            let html = ""; snap.forEach(doc => {
-                html += `<div class="relative"><img src="${doc.data().url}" class="h-32 w-full object-cover rounded-xl border-4 border-white shadow"><button onclick="deleteDoc('photos','${doc.id}','${doc.data().path}')" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs">×</button></div>`;
-            });
+            let html = ""; snap.forEach(doc => { html += `<div class="relative bg-white p-2 rounded-xl border"><img src="${doc.data().url}" class="h-32 w-full object-cover rounded-lg"><button onclick="deleteDocWithFile('photos','${doc.id}','${doc.data().path}')" class="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full text-xs">×</button></div>`; });
             document.getElementById('admin-photo-grid').innerHTML = html;
         });
 
-        async function deleteDoc(col, id, path) {
-            if(!confirm("確定刪除？")) return;
-            if(path) try { await storage.ref(path).delete(); } catch(e) {}
-            await db.collection(col).doc(id).delete();
+        // 祈福項目 (CRUD)
+        async function saveService() {
+            const id = document.getElementById('s-id').value; const name = document.getElementById('s-name').value; const price = parseInt(document.getElementById('s-price').value);
+            if(id) await db.collection("services").doc(id).update({ name, price });
+            else await db.collection("services").add({ name, price, createdAt: new Date() });
+            clearServiceForm();
         }
+        function editService(id, name, price) {
+            document.getElementById('s-id').value = id; document.getElementById('s-name').value = name; document.getElementById('s-price').value = price;
+            document.getElementById('s-form').classList.add('edit-mode'); document.getElementById('s-cancel-btn').classList.remove('hidden');
+        }
+        function clearServiceForm() {
+            document.getElementById('s-id').value = ""; document.getElementById('s-name').value = ""; document.getElementById('s-price').value = "";
+            document.getElementById('s-form').classList.remove('edit-mode'); document.getElementById('s-cancel-btn').classList.add('hidden');
+        }
+        db.collection("services").onSnapshot(snap => {
+            let html = ""; snap.forEach(doc => { const s = doc.data(); html += `<div class="p-4 bg-white border rounded-xl flex justify-between"><span><b>${s.name}</b> - $${s.price}</span><div class="flex gap-4"><button onclick="editService('${doc.id}','${s.name}',${s.price})" class="text-blue-500">編輯</button><button onclick="deleteDoc('services','${doc.id}')" class="text-red-400">刪除</button></div></div>`; });
+            document.getElementById('admin-service-list').innerHTML = html;
+        });
 
-        // 訂單核帳同步
+        // 通用刪除
+        async function deleteDoc(col, id) { if(confirm("確定刪除？")) await db.collection(col).doc(id).delete(); }
+        async function deleteDocWithFile(col, id, path) { if(confirm("確定刪除？實體檔案也會消失。")) { try { await storage.ref(path).delete(); } catch(e) {} await db.collection(col).doc(id).delete(); } }
+
+        // 訂單管理
         db.collection("orders").orderBy("createdAt", "desc").onSnapshot(snap => {
             let html = ""; snap.forEach(doc => {
                 const o = doc.data();
-                html += `<tr><td class="p-6 font-bold ${o.category==='捐獻'?'text-red-600':'text-blue-600'}">${o.category}</td><td class="p-6 font-bold">${o.name}<br><small>${o.phone}</small></td><td class="p-6">${o.item}</td><td class="p-6 font-black">$${o.amount||'-'}</td><td class="p-6 text-right"><button onclick="deleteDoc('orders','${doc.id}')" class="text-slate-300">刪除</button></td></tr>`;
+                html += `<tr><td class="p-6 font-bold ${o.category==='捐獻'?'text-red-600':'text-blue-600'}">${o.category}</td><td class="p-6 font-bold">${o.name}<br><small>${o.phone}</small></td><td class="p-6">${o.item}</td><td class="p-6">$${o.amount||'-'}</td><td class="p-6 text-right"><button onclick="deleteDoc('orders','${doc.id}')" class="text-slate-300">刪除</button></td></tr>`;
             });
             document.getElementById('order-rows').innerHTML = html;
         });
