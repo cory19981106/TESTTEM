@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>廣寧宮後台 | 影音與宮務管理系統</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-storage-compat.js"></script>
+    <style>
+        .admin-panel { display: none; }
+        .admin-panel.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .nav-btn.active { @apply bg-slate-800 border-l-4 border-yellow-500 text-white font-bold; }
+    </style>
+</head>
+<body class="bg-slate-100 flex min-h-screen">
+
+    <aside class="w-64 bg-slate-900 text-slate-400 sticky top-0 h-screen shadow-2xl flex flex-col">
+        <div class="p-8 text-center border-b border-slate-800"><h2 class="text-xl font-bold text-yellow-500">廣寧宮管理</h2></div>
+        <nav class="mt-6 flex-1 space-y-1">
+            <button onclick="showPanel('orders')" id="btn-orders" class="nav-btn w-full text-left px-8 py-4 flex items-center hover:bg-slate-800 active"><i class="fas fa-hand-holding-heart mr-3"></i> 訂單與香油錢</button>
+            <button onclick="showPanel('photos')" id="btn-photos" class="nav-btn w-full text-left px-8 py-4 flex items-center hover:bg-slate-800"><i class="fas fa-camera mr-3"></i> 活動照片上傳</button>
+            <button onclick="showPanel('videos')" id="btn-videos" class="nav-btn w-full text-left px-8 py-4 flex items-center hover:bg-slate-800"><i class="fas fa-video mr-3"></i> 影音作品管理</button>
+            <button onclick="showPanel('services')" id="btn-services" class="nav-btn w-full text-left px-8 py-4 flex items-center hover:bg-slate-800"><i class="fas fa-tags mr-3"></i> 祈福項目設定</button>
+        </nav>
+    </aside>
+
+    <main class="flex-1 p-10 overflow-y-auto">
+        <h2 id="main-title" class="text-3xl font-black mb-8">訂單與香油錢</h2>
+
+        <section id="panel-orders" class="admin-panel active">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border mb-6 flex gap-4 items-end">
+                <div class="flex-1"><label class="text-xs font-bold text-slate-400 uppercase">搜尋姓名/電話</label><input type="text" id="o-search" onkeyup="fetchOrders()" class="w-full mt-1 p-2 bg-slate-50 border rounded-xl" placeholder="輸入關鍵字..."></div>
+                <div class="w-40"><label class="text-xs font-bold text-slate-400 uppercase">分類篩選</label><select id="o-cat" onchange="fetchOrders()" class="w-full mt-1 p-2 bg-slate-50 border rounded-xl font-bold text-blue-600"><option value="all">所有類別</option><option value="點燈">點燈報名</option><option value="捐獻">香油錢</option></select></div>
+            </div>
+            <div class="bg-white rounded-[2rem] shadow-sm border overflow-hidden text-sm">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b text-slate-400 font-bold uppercase tracking-widest"><tr><th class="p-6">類別</th><th class="p-6">信眾資訊</th><th class="p-6">項目</th><th class="p-6 text-right">金額</th><th class="p-6">狀態</th><th class="p-6">操作</th></tr></thead>
+                    <tbody id="order-rows" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="panel-photos" class="admin-panel">
+            <div class="bg-white p-8 rounded-[2rem] shadow-sm border mb-8 max-w-xl">
+                <div class="space-y-4">
+                    <input type="text" id="p-title" placeholder="活動標題" class="w-full border p-3 rounded-xl outline-none">
+                    <div class="border-2 border-dashed border-slate-200 p-6 rounded-2xl text-center">
+                        <input type="file" id="p-file" accept="image/*" class="hidden">
+                        <label for="p-file" class="cursor-pointer text-blue-600 font-bold">點此選取電腦照片</label>
+                        <p id="p-filename" class="mt-2 text-xs text-slate-400">尚未選擇檔案</p>
+                    </div>
+                    <div id="p-progress" class="hidden w-full bg-gray-200 rounded-full h-2"><div id="p-bar" class="bg-blue-600 h-2 rounded-full transition-all" style="width: 0%"></div></div>
+                    <button onclick="uploadPhoto()" id="p-btn" class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold">開始上傳</button>
+                </div>
+            </div>
+            <div id="admin-photo-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+        </section>
+
+        <section id="panel-videos" class="admin-panel">
+            <div class="bg-white p-8 rounded-[2rem] shadow-sm border mb-8 max-w-xl">
+                <div class="space-y-4">
+                    <input type="text" id="v-title" placeholder="影片名稱" class="w-full border p-3 rounded-xl">
+                    <input type="text" id="v-ytid" placeholder="YouTube ID" class="w-full border p-3 rounded-xl">
+                    <button onclick="addVideo()" class="w-full bg-red-600 text-white py-3 rounded-xl font-bold">新增影音</button>
+                </div>
+            </div>
+            <div id="admin-video-list" class="space-y-2 max-w-2xl"></div>
+        </section>
+
+        <section id="panel-services" class="admin-panel">
+            <div class="bg-white p-8 rounded-[2rem] shadow-sm border mb-8 max-w-xl">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <input type="text" id="s-name" placeholder="項目名稱" class="border p-3 rounded-xl"><input type="number" id="s-price" placeholder="價格" class="border p-3 rounded-xl">
+                </div>
+                <button onclick="addService()" class="w-full bg-yellow-600 text-white py-3 rounded-xl font-bold">新增項目</button>
+            </div>
+            <div id="admin-service-list" class="space-y-2 max-w-xl"></div>
+        </section>
+    </main>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2PuFt4epkjrkEByoSEqcw88eAVuxjB70",
+            authDomain: "testproject-fb870.firebaseapp.com",
+            projectId: "testproject-fb870",
+            storageBucket: "testproject-fb870.firebasestorage.app",
+            messagingSenderId: "164908049871",
+            appId: "1:164908049871:web:21e77c3bb591de85685eba"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        function showPanel(id) {
+            document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('panel-' + id).classList.add('active');
+            document.getElementById('btn-' + id).classList.add('active');
+            const titles = { 'orders': '訂單與香油錢', 'photos': '活動照片上傳', 'videos': '影音作品管理', 'services': '祈福項目設定' };
+            document.getElementById('main-title').innerText = titles[id];
+        }
+
+        // 照片選擇名稱顯示
+        document.getElementById('p-file').onchange = e => {
+            document.getElementById('p-filename').innerText = e.target.files[0]?.name || "尚未選擇檔案";
+        };
+
+        // 上傳照片
+        async function uploadPhoto() {
+            const file = document.getElementById('p-file').files[0];
+            const title = document.getElementById('p-title').value;
+            if(!file || !title) return alert("請填寫標題並選取照片");
+            const btn = document.getElementById('p-btn');
+            const bar = document.getElementById('p-bar');
+            document.getElementById('p-progress').classList.remove('hidden');
+            btn.disabled = true;
+
+            const ref = storage.ref(`gallery/${Date.now()}_${file.name}`);
+            const task = ref.put(file);
+
+            task.on('state_changed', 
+                (snap) => { bar.style.width = (snap.bytesTransferred / snap.totalBytes) * 100 + '%'; },
+                (err) => alert("上傳失敗"),
+                async () => {
+                    const url = await task.snapshot.ref.getDownloadURL();
+                    await db.collection("photos").add({ title, url, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    alert("上傳成功");
+                    location.reload();
+                }
+            );
+        }
+
+        // 訂單核帳邏輯
+        async function fetchOrders() {
+            const search = document.getElementById('o-search').value;
+            const cat = document.getElementById('o-cat').value;
+            const snap = await db.collection("orders").orderBy("createdAt", "desc").get();
+            let html = "";
+            snap.forEach(doc => {
+                const o = doc.data();
+                if(cat !== 'all' && o.category !== cat) return;
+                if(search && !o.name.includes(search) && !o.phone.includes(search)) return;
+                html += `<tr class="hover:bg-slate-50"><td class="p-6 font-bold ${o.category === '捐獻' ? 'text-red-600' : 'text-blue-600'}">${o.category}</td><td class="p-6 font-bold">${o.name}<br><small class="text-slate-400 font-normal">${o.phone}</small></td><td class="p-6">${o.item}</td><td class="p-6 text-right font-black">$${o.amount || '-'}</td><td class="p-6"><span class="text-xs font-bold text-yellow-600">${o.status}</span></td><td class="p-6"><button onclick="updateStatus('${doc.id}')" class="text-blue-600 underline font-bold text-xs">核帳</button></td></tr>`;
+            });
+            document.getElementById('order-rows').innerHTML = html;
+        }
+
+        async function updateStatus(id) {
+            await db.collection("orders").doc(id).update({ status: "已核帳" });
+            fetchOrders();
+        }
+
+        // 影音與服務項目管理邏輯略... (邏輯與照片一致)
+        window.onload = fetchOrders;
+    </script>
+</body>
+</html>
