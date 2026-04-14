@@ -1,70 +1,89 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>員林廣寧宮 | 三山國王官方網站</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { 't-red': '#8B0000', 't-gold': '#D4AF37', 't-blue': '#0A2540' }, fontFamily: { 'serif': ['"Noto Serif TC"', 'serif'] } } }
+        }
+    </script>
     <style>
         body { font-family: 'serif'; background-color: #FDFCF5; scroll-behavior: smooth; }
         .page-section { display: none; min-height: 85vh; }
         .page-section.active { display: block; animation: fadeIn 0.6s ease; }
+        
+        /* 下拉選單優化：增加隱形橋接層防止消失 */
+        .dropdown { position: relative; }
+        .dropdown-menu { display: none; position: absolute; left: 0; top: 100%; pt: 10px; width: 12rem; z-index: 50; }
+        .dropdown-menu::before { content: ""; position: absolute; top: -15px; left: 0; width: 100%; height: 20px; }
         .dropdown:hover .dropdown-menu { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="text-slate-800">
 
-    <nav class="bg-white/95 sticky top-0 z-50 border-b border-t-gold/20 shadow-sm p-4 font-bold flex flex-wrap justify-between px-6 md:px-12 items-center">
-        <div onclick="showPage('home')" class="flex items-center space-x-2 cursor-pointer group">
-            <div class="w-10 h-10 bg-[#8B0000] rounded-full flex items-center justify-center text-white text-xl shadow-lg group-hover:scale-110 transition">廣</div>
-            <span class="text-xl tracking-tighter text-[#0A2540] uppercase">員林廣寧宮</span>
-        </div>
+    <nav class="bg-white/95 sticky top-0 z-50 border-b border-t-gold/20 shadow-sm p-4 font-bold">
+        <div class="container mx-auto flex justify-between items-center px-4 md:px-10">
+            <div onclick="showPage('home')" class="flex items-center space-x-2 cursor-pointer group">
+                <div class="w-10 h-10 bg-t-red rounded-full flex items-center justify-center text-white text-xl shadow-lg group-hover:scale-110 transition">廣</div>
+                <h1 class="text-xl tracking-tighter text-t-blue uppercase">員林廣寧宮</h1>
+            </div>
 
-        <ul class="hidden lg:flex space-x-10 text-sm items-center">
-            <li class="relative dropdown">
-                <a class="cursor-pointer hover:text-[#D4AF37] pb-4 block">關於廣寧宮 <i class="fas fa-chevron-down text-[10px]"></i></a>
-                <div class="dropdown-menu hidden absolute left-0 mt-2 w-48 bg-white shadow-2xl rounded-xl border p-2">
-                    <a onclick="showPage('about','history')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg">本宮歷史沿革</a>
-                    <a onclick="showPage('about','kings')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg">主祀三山國王</a>
-                    <a onclick="showPage('about','deities')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg">配祀神祉介紹</a>
-                </div>
-            </li>
-            <li class="relative dropdown">
-                <a class="cursor-pointer hover:text-[#D4AF37] pb-4 block">線上信眾服務 <i class="fas fa-chevron-down text-[10px]"></i></a>
-                <div class="dropdown-menu hidden absolute left-0 mt-2 w-48 bg-white shadow-2xl rounded-xl border p-2">
-                    <a onclick="showPage('service','bless')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg">祈福點燈登記</a>
-                    <a onclick="showPage('service','donate')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg">香油錢捐獻</a>
-                </div>
-            </li>
-            <li><a onclick="showPage('products')" class="cursor-pointer hover:text-[#D4AF37]">文創商品</a></li>
-            <li><a onclick="showPage('gallery')" class="cursor-pointer hover:text-[#D4AF37]">活動花絮</a></li>
-            <li><a onclick="showPage('video')" class="cursor-pointer hover:text-[#D4AF37]">影音專區</a></li>
-            <li><a onclick="showPage('contact')" class="cursor-pointer hover:text-[#D4AF37]">聯絡我們</a></li>
-        </ul>
-        <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="lg:hidden text-2xl text-[#0A2540]"><i class="fas fa-bars"></i></button>
+            <ul class="hidden lg:flex space-x-10 text-sm items-center">
+                <li class="dropdown">
+                    <a class="cursor-pointer hover:text-t-gold pb-4 block">關於廣寧宮 <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
+                    <div class="dropdown-menu">
+                        <div class="bg-white shadow-2xl rounded-2xl border p-2">
+                            <a onclick="showPage('about','history')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg">本宮歷史沿革</a>
+                            <a onclick="showPage('about','kings')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg">主祀三山國王</a>
+                            <a onclick="showPage('about','deities')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg">配祀神祉介紹</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a class="cursor-pointer hover:text-t-gold pb-4 block">線上信眾服務 <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
+                    <div class="dropdown-menu">
+                        <div class="bg-white shadow-2xl rounded-2xl border p-2">
+                            <a onclick="showPage('service','bless')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg text-t-gold">祈福點燈登記</a>
+                            <a onclick="showPage('service','donate')" class="block px-4 py-3 hover:bg-slate-50 rounded-lg text-t-red">香油錢捐獻</a>
+                        </div>
+                    </div>
+                </li>
+                <li><a onclick="showPage('products')" class="cursor-pointer hover:text-t-gold">文創商品</a></li>
+                <li><a onclick="showPage('gallery')" class="cursor-pointer hover:text-t-gold">活動花絮</a></li>
+                <li><a onclick="showPage('video')" class="cursor-pointer hover:text-t-gold">影音專區</a></li>
+                <li><a onclick="showPage('contact')" class="cursor-pointer hover:text-t-gold">聯絡我們</a></li>
+            </ul>
+
+            <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="lg:hidden text-2xl text-t-blue"><i class="fas fa-bars"></i></button>
+        </div>
         
-        <div id="mobile-menu" class="hidden w-full lg:hidden bg-white mt-4 p-4 space-y-4 shadow-xl rounded-2xl">
-            <a onclick="showPage('home')" class="block font-bold">回首頁</a>
-            <a onclick="showPage('about','history')" class="block font-bold">關於廣寧宮</a>
-            <a onclick="showPage('service','bless')" class="block font-bold">祈福與捐獻</a>
-            <a onclick="showPage('products')" class="block font-bold">文創商品</a>
-            <a onclick="showPage('contact')" class="block font-bold">聯絡資訊</a>
+        <div id="mobile-menu" class="hidden lg:hidden bg-white mt-4 p-4 space-y-4 shadow-xl rounded-2xl">
+            <a onclick="showPage('home')" class="block font-bold p-2 bg-slate-50 rounded-xl">回首頁</a>
+            <a onclick="showPage('about','history')" class="block font-bold p-2">關於廣寧宮</a>
+            <a onclick="showPage('service','bless')" class="block font-bold p-2">祈福與捐獻</a>
+            <a onclick="showPage('products')" class="block font-bold p-2">文創商品</a>
+            <a onclick="showPage('contact')" class="block font-bold p-2">聯絡我們</a>
         </div>
     </nav>
 
     <main class="container mx-auto px-4 py-10">
         <section id="home" class="page-section active">
             <div class="h-[45vh] md:h-[55vh] bg-slate-900 rounded-[3rem] mb-12 flex items-center justify-center text-white text-center p-6 shadow-2xl relative overflow-hidden">
-                <div class="z-10"><h2 class="text-5xl md:text-7xl font-black font-serif tracking-widest drop-shadow-2xl">三百年香火</h2><p class="mt-4 italic opacity-80 uppercase tracking-widest text-lg">乾隆四年創立 · 員林中正路三山國王祖廟</p></div>
+                <div class="z-10"><h2 class="text-5xl md:text-7xl font-black font-serif tracking-widest drop-shadow-2xl">三百年香火</h2><p class="mt-4 italic opacity-80 uppercase tracking-widest text-lg">乾隆四年創立 · 員林中正路祖廟</p></div>
                 <div class="absolute inset-0 bg-black/40"></div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                <div class="lg:col-span-1 bg-white p-8 rounded-[2.5rem] shadow-xl border-t-8 border-[#8B0000]">
-                    <h3 class="font-black text-2xl mb-6 flex justify-between items-center text-[#0A2540]">最新消息 <i class="fas fa-bullhorn text-red-600"></i></h3>
+                <div class="lg:col-span-1 bg-white p-8 rounded-[2.5rem] shadow-xl border-t-8 border-t-red">
+                    <h3 class="font-black text-2xl mb-6 flex justify-between items-center text-t-blue">最新消息 <i class="fas fa-bullhorn text-red-600"></i></h3>
                     <div id="home-news-list" class="space-y-4"></div>
                 </div>
                 <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8" id="home-services-display"></div>
@@ -73,16 +92,15 @@
 
         <section id="page-about" class="page-section max-w-5xl mx-auto py-10">
             <div id="content-history" class="sub-content bg-white p-10 md:p-16 rounded-[3.5rem] shadow-xl leading-loose">
-                <h2 class="text-4xl font-black mb-8 text-[#0A2540] border-b pb-4">歷史沿革</h2>
-                <p class="text-lg mb-6">員林廣寧宮，俗稱「員林王爺宮」，建於清乾隆四年（1739年），為主祀三山國王之歷史名剎...</p>
-                <p class="text-lg">當年先民渡海來台，攜祖籍香火於此開墾，見證員林三百年繁榮軌跡。</p>
+                <h2 class="text-4xl font-black mb-8 text-t-blue border-b pb-4 font-serif">歷史沿革</h2>
+                <p class="text-lg mb-6">員林廣寧宮，俗稱「員林王爺宮」，建於清乾隆四年（1739年），為主祀三山國王之歷史名剎。廣寧宮見證了員林地區三百年來的拓荒與繁榮...</p>
             </div>
             <div id="content-kings" class="sub-content hidden bg-white p-12 rounded-[3.5rem] shadow-xl text-center">
-                <h2 class="text-3xl font-black mb-12 text-[#0A2540]">主祀：三山國王</h2>
+                <h2 class="text-3xl font-black mb-12 text-t-blue font-serif">主祀：三山國王</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="p-8 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-bold text-xl">巾山大國王</div>
-                    <div class="p-8 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-bold text-xl">明山二國王</div>
-                    <div class="p-8 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-bold text-xl">獨山三國王</div>
+                    <div class="p-10 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-bold text-xl">巾山大國王</div>
+                    <div class="p-10 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-bold text-xl">明山二國王</div>
+                    <div class="p-10 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-bold text-xl">獨山三國王</div>
                 </div>
             </div>
             <div id="content-deities" class="sub-content hidden grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -92,32 +110,8 @@
             </div>
         </section>
 
-        <section id="page-service" class="page-section max-w-2xl mx-auto py-10">
-            <div id="content-bless" class="sub-content bg-white p-10 md:p-16 rounded-[3.5rem] shadow-2xl border-t-8 border-[#D4AF37]">
-                <h2 class="text-3xl font-black text-center text-[#D4AF37] mb-8 italic">祈福點燈登記</h2>
-                <div class="space-y-4">
-                    <input type="text" id="b_name" placeholder="信眾姓名" class="w-full border-2 p-4 rounded-2xl outline-none focus:border-[#D4AF37]">
-                    <input type="tel" id="b_phone" placeholder="連絡電話" class="w-full border-2 p-4 rounded-2xl outline-none focus:border-[#D4AF37]">
-                    <select id="service-select" class="w-full border-2 p-4 rounded-2xl font-bold bg-slate-50"></select>
-                    <button onclick="submitOrder('點燈')" class="w-full bg-[#D4AF37] text-white py-5 rounded-2xl font-black shadow-xl hover:bg-black transition text-lg mt-6">確認登記</button>
-                </div>
-            </div>
-            <div id="content-donate" class="sub-content hidden bg-white p-10 md:p-16 rounded-[3.5rem] shadow-2xl border-t-8 border-[#8B0000] text-center">
-                <h2 class="text-3xl font-black text-[#8B0000] mb-8 italic">香油錢捐獻</h2>
-                <input type="number" id="d_amount" placeholder="金額 (TWD)" class="w-full border-2 p-6 rounded-2xl text-4xl font-black text-center border-red-100 bg-red-50/20 outline-none mb-6">
-                <input type="text" id="d_name" placeholder="捐獻者姓名" class="w-full border-2 p-4 rounded-2xl mb-4">
-                <input type="tel" id="d_phone" placeholder="電話" class="w-full border-2 p-4 rounded-2xl mb-6">
-                <button onclick="submitOrder('捐獻')" class="w-full bg-[#8B0000] text-white py-5 rounded-2xl font-black shadow-xl hover:bg-black transition text-lg">確認送出資料</button>
-            </div>
-        </section>
-
-        <section id="products" class="page-section max-w-7xl mx-auto py-10">
-            <h2 class="text-5xl font-black text-center mb-16 font-serif tracking-widest uppercase">文創商品展示</h2>
-            <div id="display-products" class="grid grid-cols-2 md:grid-cols-4 gap-10"></div>
-        </section>
-
         <section id="video" class="page-section max-w-6xl mx-auto py-10">
-            <h2 class="text-4xl font-black text-center mb-16 font-serif">影音紀實</h2>
+            <h2 class="text-4xl font-black text-center mb-16 font-serif">影音紀實作品</h2>
             <div id="display-videos" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div>
         </section>
 
@@ -126,23 +120,48 @@
             <div id="display-photos" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
         </section>
 
+        <section id="page-service" class="page-section max-w-2xl mx-auto py-10">
+            <div id="content-bless" class="sub-content bg-white p-10 md:p-16 rounded-[3.5rem] shadow-2xl border-t-8 border-t-gold">
+                <h2 class="text-3xl font-black text-center text-t-gold mb-8 italic">祈福點燈登記</h2>
+                <div class="space-y-4">
+                    <input type="text" id="b_name" placeholder="信眾姓名" class="w-full border-2 p-4 rounded-2xl outline-none focus:border-t-gold">
+                    <input type="tel" id="b_phone" placeholder="連絡電話" class="w-full border-2 p-4 rounded-2xl outline-none focus:border-t-gold">
+                    <select id="service-select" class="w-full border-2 p-4 rounded-2xl font-bold bg-slate-50"></select>
+                    <button onclick="submitOrder('點燈')" class="w-full bg-t-gold text-white py-5 rounded-2xl font-black shadow-xl hover:bg-black transition text-lg mt-6">確認登記資料</button>
+                </div>
+            </div>
+            <div id="content-donate" class="sub-content hidden bg-white p-10 md:p-16 rounded-[3.5rem] shadow-2xl border-t-8 border-t-red text-center">
+                <h2 class="text-3xl font-black text-t-red mb-8 italic">香油錢功德捐獻</h2>
+                <input type="number" id="d_amount" placeholder="金額 (TWD)" class="w-full border-2 p-6 rounded-2xl text-4xl font-black text-center border-red-100 bg-red-50/20 outline-none mb-6">
+                <input type="text" id="d_name" placeholder="姓名" class="w-full border-2 p-4 rounded-2xl mb-4">
+                <input type="tel" id="d_phone" placeholder="電話" class="w-full border-2 p-4 rounded-2xl mb-6">
+                <button onclick="submitOrder('捐獻')" class="w-full bg-t-red text-white py-5 rounded-2xl font-black shadow-xl hover:bg-black transition text-lg">完成功德登記</button>
+            </div>
+        </section>
+
+        <section id="products" class="page-section max-w-7xl mx-auto py-10">
+            <h2 class="text-4xl font-black text-center mb-16 font-serif">文創商品展示</h2>
+            <div id="display-products" class="grid grid-cols-2 md:grid-cols-4 gap-8"></div>
+        </section>
+
         <section id="contact" class="page-section max-w-5xl mx-auto py-10">
-            <div class="bg-white p-12 md:p-20 rounded-[4rem] shadow-2xl grid grid-cols-1 md:grid-cols-2 gap-16">
+            <div class="bg-white p-12 md:p-16 rounded-[4rem] shadow-2xl grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div>
-                    <h3 class="text-3xl font-black mb-8 border-b pb-4 text-[#8B0000] font-serif">聯絡資訊</h3>
+                    <h3 class="text-3xl font-black mb-8 border-b pb-4 text-t-red font-serif italic">聯絡資訊</h3>
                     <div class="space-y-8 text-xl">
-                        <p><i class="fas fa-map-marker-alt mr-4 text-[#D4AF37]"></i> 彰化縣員林市中正路360號</p>
-                        <p><i class="fas fa-phone mr-4 text-[#D4AF37]"></i> 04-8320436</p>
-                        <p><i class="fas fa-clock mr-4 text-[#D4AF37]"></i> 每日 06:00 - 21:00</p>
+                        <p><i class="fas fa-map-marker-alt mr-4 text-t-gold"></i> 彰化縣員林市中正路360號</p>
+                        <p><i class="fas fa-phone mr-4 text-t-gold"></i> 04-8320436</p>
+                        <p><i class="fas fa-clock mr-4 text-t-gold"></i> 每日 06:00 - 21:00</p>
                     </div>
                 </div>
-                <div class="text-center flex flex-col justify-center items-center">
-                    <h3 class="text-2xl font-black mb-10 text-[#0A2540]">社群連動</h3>
-                    <div class="flex justify-center space-x-10 text-6xl">
+                <div class="text-center flex flex-col justify-center items-center border-t md:border-t-0 md:border-l pt-10 md:pt-0">
+                    <h3 class="text-2xl font-black mb-10 text-t-blue">社群追蹤與即時通訊</h3>
+                    <div class="flex justify-center space-x-10 text-5xl">
                         <a href="#" class="text-green-500 hover:scale-110 transition"><i class="fab fa-line"></i></a>
                         <a href="#" class="text-blue-700 hover:scale-110 transition"><i class="fab fa-facebook"></i></a>
                         <a href="#" class="text-pink-500 hover:scale-110 transition"><i class="fab fa-instagram"></i></a>
                     </div>
+                    <p class="mt-8 text-slate-400 font-bold">歡迎加入 LINE 獲得最新宮務訊息</p>
                 </div>
             </div>
         </section>
@@ -151,22 +170,22 @@
     <div id="bank-modal" class="fixed inset-0 bg-black/90 z-[200] hidden items-center justify-center p-6 backdrop-blur-md">
         <div class="bg-white rounded-[3rem] p-10 max-w-lg w-full text-center shadow-2xl">
             <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-4xl mx-auto mb-8"><i class="fas fa-check"></i></div>
-            <h2 class="text-3xl font-black mb-4 text-[#0A2540]">登記資料已送出</h2>
+            <h2 class="text-3xl font-black mb-4">資料已成功送出</h2>
             <p class="text-slate-500 mb-8 leading-relaxed">感謝您的發心。請於三日內完成匯款核帳，以便本宮為您辦理後續服務。</p>
             <div class="bg-slate-50 p-8 rounded-3xl text-left border-2 border-dashed border-slate-200 mb-8 space-y-3 font-mono">
                 <p><b>銀行：</b> 員林市農會 (代碼 614)</p>
                 <p><b>戶名：</b> 員林廣寧宮</p>
                 <p><b>帳號：</b> 1234-5678-9012-3456</p>
             </div>
-            <button onclick="document.getElementById('bank-modal').classList.add('hidden')" class="w-full bg-[#0A2540] text-white py-5 rounded-2xl font-black">我已記下資訊</button>
+            <button onclick="document.getElementById('bank-modal').classList.add('hidden')" class="w-full bg-t-blue text-white py-5 rounded-2xl font-black shadow-lg">我已記下，返回官網</button>
         </div>
     </div>
 
-    <div id="news-modal" class="fixed inset-0 bg-black/80 z-[100] hidden items-center justify-center p-6">
+    <div id="news-modal" class="fixed inset-0 bg-black/80 z-[100] hidden items-center justify-center p-6 backdrop-blur-sm">
         <div class="bg-white rounded-[3rem] p-12 max-w-md w-full relative shadow-2xl">
-            <h2 id="m-title" class="text-3xl font-black mb-6 border-b pb-6 text-[#0A2540]"></h2>
+            <h2 id="m-title" class="text-3xl font-black mb-6 border-b pb-6 text-t-blue"></h2>
             <div id="m-content" class="leading-loose text-slate-600 whitespace-pre-wrap max-h-[50vh] overflow-y-auto pr-4"></div>
-            <button onclick="document.getElementById('news-modal').classList.add('hidden')" class="w-full mt-10 bg-slate-900 text-white py-5 rounded-2xl font-black">返回官網</button>
+            <button onclick="document.getElementById('news-modal').classList.add('hidden')" class="w-full mt-10 bg-slate-900 text-white py-5 rounded-2xl font-black shadow-2xl">確認並關閉</button>
         </div>
     </div>
 
@@ -175,47 +194,51 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // 頁面切換邏輯
         function showPage(pageId, subId = null) {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             const target = document.getElementById('page-' + pageId) || document.getElementById(pageId);
-            target.classList.add('active');
+            if(target) target.classList.add('active');
+            
             if(subId) {
                 document.querySelectorAll('.sub-content').forEach(c => c.classList.add('hidden'));
-                document.getElementById('content-' + subId).classList.remove('hidden');
+                const subContent = document.getElementById('content-' + subId);
+                if(subContent) subContent.classList.remove('hidden');
             }
+            
             document.getElementById('mobile-menu').classList.add('hidden');
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        // 即時監聽與數據渲染 (公告/商品/影音/照片)
+        // 即時監聽與渲染
         db.collection("news").orderBy("createdAt","desc").onSnapshot(snap => {
-            let h = ""; snap.forEach(doc => { const n = doc.data(); h += `<div onclick="openModal('${n.title}', \`${n.content}\` )" class="p-5 bg-slate-50 border-l-[10px] border-red-600 rounded-2xl cursor-pointer hover:bg-red-50 font-black text-lg truncate transition shadow-sm">${n.title}</div>`; });
-            document.getElementById('home-news-list').innerHTML = h || '<p class="text-slate-400">目前尚無最新消息</p>';
+            let h = ""; snap.forEach(doc => { const n = doc.data(); h += `<div onclick="openModal('${n.title}', \`${n.content}\` )" class="p-5 bg-slate-50 border-l-[10px] border-t-red rounded-2xl cursor-pointer hover:bg-red-50 font-black text-lg truncate transition shadow-sm">${n.title}</div>`; });
+            document.getElementById('home-news-list').innerHTML = h || '<p class="text-slate-400">目前尚無公告</p>';
         });
         function openModal(t,c) { document.getElementById('m-title').innerText=t; document.getElementById('m-content').innerText=c; document.getElementById('news-modal').classList.remove('hidden'); }
 
-        db.collection("products").orderBy("createdAt","desc").onSnapshot(snap => {
-            let h = ""; snap.forEach(doc => { const p = doc.data(); h += `<div class="bg-white p-6 rounded-[2.5rem] shadow-xl border border-slate-50 hover:scale-105 transition duration-500 text-center"><img src="${p.url}" class="w-full h-56 object-cover rounded-[2rem] mb-6 shadow-md"><h4 class="font-black text-xl mb-2">${p.name}</h4><p class="text-red-600 font-black text-2xl">$${p.price}</p></div>`; });
-            document.getElementById('display-products').innerHTML = h;
-        });
-
         db.collection("services").onSnapshot(snap => {
-            let grid = ""; let opts = '<option value="" disabled selected>請選擇祈福項目</option>';
+            let grid = ""; let opts = '<option value="" disabled selected>請選擇項目</option>';
             snap.forEach(doc => { const s = doc.data(); 
-                grid += `<div class="bg-white p-8 rounded-2xl border-t-4 border-[#D4AF37] shadow-md flex justify-between font-bold text-xl"><span>${s.name}</span><span class="text-red-600">$${s.price}</span></div>`;
+                grid += `<div class="bg-white p-8 rounded-[2.5rem] border-t-8 border-t-gold shadow-xl flex justify-between items-center font-bold text-xl"><span>${s.name}</span><span class="text-t-red font-black text-3xl">$${s.price}</span></div>`;
                 opts += `<option value="${s.name}" data-price="${s.price}">${s.name} ($${s.price})</option>`;
             });
             document.getElementById('home-services-display').innerHTML = grid;
             document.getElementById('service-select').innerHTML = opts;
         });
 
+        db.collection("products").orderBy("createdAt", "desc").onSnapshot(snap => {
+            let h = ""; snap.forEach(doc => { const p = doc.data(); h += `<div class="bg-white p-6 rounded-[2.5rem] shadow-xl border border-slate-50 text-center hover:scale-105 transition duration-500"><img src="${p.url}" class="w-full h-56 object-cover rounded-[2rem] mb-6 shadow-md"><h4 class="font-black text-xl mb-2">${p.name}</h4><p class="text-t-red font-black text-2xl">$${p.price}</p></div>`; });
+            document.getElementById('display-products').innerHTML = h;
+        });
+
         db.collection("videos").orderBy("createdAt","desc").onSnapshot(snap => {
-            let h = ""; snap.forEach(doc => { const v = doc.data(); h += `<div class="bg-white p-4 rounded-[2.5rem] shadow-2xl"><div class="aspect-video bg-black rounded-[2rem] overflow-hidden"><iframe class="w-full h-full" src="https://www.youtube.com/embed/${v.ytid}" frameborder="0" allowfullscreen></iframe></div><h4 class="mt-6 px-4 font-black text-xl text-[#0A2540]">${v.title}</h4></div>`; });
+            let h = ""; snap.forEach(doc => { const v = doc.data(); h += `<div class="bg-white p-4 rounded-[2.5rem] shadow-2xl"><div class="aspect-video bg-black rounded-[2rem] overflow-hidden"><iframe class="w-full h-full" src="https://www.youtube.com/embed/${v.ytid}" frameborder="0" allowfullscreen></iframe></div><h4 class="mt-6 px-4 font-black text-xl text-t-blue">${v.title}</h4></div>`; });
             document.getElementById('display-videos').innerHTML = h;
         });
 
         db.collection("photos").orderBy("createdAt","desc").onSnapshot(snap => {
-            let h = ""; snap.forEach(doc => { h += `<div class="rounded-2xl overflow-hidden shadow-lg border-4 border-white aspect-square"><img src="${doc.data().url}" class="w-full h-full object-cover"></div>`; });
+            let h = ""; snap.forEach(doc => { h += `<div class="rounded-3xl overflow-hidden shadow-lg border-4 border-white aspect-square"><img src="${doc.data().url}" class="w-full h-full object-cover"></div>`; });
             document.getElementById('display-photos').innerHTML = h;
         });
 
@@ -233,7 +256,7 @@
                 data.amount = document.getElementById('d_amount').value;
                 data.item = "油香功德";
             }
-            if(!data.name || !data.phone) return alert("請完整填寫姓名電話");
+            if(!data.name || !data.phone) return alert("請填寫完整姓名電話");
             await db.collection("orders").add(data);
             document.getElementById('bank-modal').classList.remove('hidden');
         }
