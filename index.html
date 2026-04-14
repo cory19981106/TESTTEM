@@ -3,39 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>員林廣寧宮 | 三山國王祖廟官方網站</title>
+    <title>員林廣寧宮 | 三山國王官方網站</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;900&display=swap" rel="stylesheet">
-    
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
-
     <script>
-        tailwind.config = {
-            theme: { extend: { colors: { 't-red': '#8B0000', 't-gold': '#D4AF37', 't-blue': '#0A2540', 't-bg': '#FDFCF5' }, fontFamily: { 'serif': ['"Noto Serif TC"', 'serif'] } } }
-        }
+        tailwind.config = { theme: { extend: { colors: { 't-red': '#8B0000', 't-gold': '#D4AF37', 't-blue': '#0A2540' }, fontFamily: { 'serif': ['"Noto Serif TC"', 'serif'] } } } }
     </script>
     <style>
         body { font-family: 'serif'; background-color: #FDFCF5; scroll-behavior: smooth; }
         .page-section { display: none; min-height: 80vh; }
-        .page-section.active { display: block; animation: fadeIn 0.8s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .nav-link:hover { color: #D4AF37; }
+        .page-section.active { display: block; animation: slideUp 0.8s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="text-slate-800">
 
-    <nav class="bg-white/95 backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-t-gold/20 font-bold">
-        <div class="container mx-auto flex justify-between items-center px-6 py-4">
+    <nav class="bg-white/95 sticky top-0 z-50 shadow-sm border-b border-t-gold/20 font-bold p-4">
+        <div class="container mx-auto flex justify-between items-center px-6">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('home')">
                 <div class="w-10 h-10 bg-t-red rounded-full flex items-center justify-center text-white font-black shadow-lg">廣</div>
                 <h1 class="text-xl font-black text-t-blue tracking-tighter">員林廣寧宮</h1>
             </div>
-            <ul class="hidden lg:flex items-center space-x-6 text-sm">
-                <li><a onclick="showPage('news')" class="cursor-pointer nav-link">最新消息</a></li>
-                <li><a onclick="showPage('gallery')" class="cursor-pointer nav-link">活動照片</a></li>
-                <li><a onclick="showPage('video')" class="cursor-pointer nav-link">影音專區</a></li>
+            <ul class="hidden lg:flex space-x-6 text-sm">
+                <li><a onclick="showPage('news')" class="cursor-pointer hover:text-t-gold">最新消息</a></li>
+                <li><a onclick="showPage('gallery')" class="cursor-pointer hover:text-t-gold">活動照片</a></li>
+                <li><a onclick="showPage('video')" class="cursor-pointer hover:text-t-gold">影音專區</a></li>
                 <li><button onclick="showPage('bless')" class="bg-t-gold text-white px-5 py-2 rounded-full shadow-md">祈福報名</button></li>
                 <li><button onclick="showPage('donate')" class="bg-t-red text-white px-5 py-2 rounded-full shadow-md">捐獻油香</button></li>
             </ul>
@@ -43,37 +38,28 @@
     </nav>
 
     <main class="container mx-auto px-6 py-10">
-
         <section id="home" class="page-section active">
-            <div class="rounded-[2.5rem] overflow-hidden h-[60vh] bg-slate-900 relative shadow-2xl mb-16">
+            <div class="rounded-[3rem] overflow-hidden h-[60vh] bg-slate-900 relative shadow-2xl mb-16">
                 <div class="absolute inset-0 bg-black/40 z-10 flex flex-col justify-center items-center text-white text-center p-6">
-                    <p class="text-t-gold tracking-[0.5em] mb-4 text-sm font-bold uppercase">員林王爺宮 · 乾隆四年創立</p>
-                    <h2 class="text-5xl md:text-6xl font-black mb-6 tracking-widest drop-shadow-2xl">三百年香火 · 守護員林</h2>
-                    <p class="text-xl font-light italic opacity-90 leading-relaxed italic">「中正路上最平靜的一抹線香，是我們與神明最溫柔的對話。」</p>
+                    <p class="text-t-gold tracking-[0.4em] mb-4 text-sm font-bold uppercase">員林王爺宮 · 乾隆四年創立</p>
+                    <h2 class="text-5xl md:text-7xl font-black mb-6 tracking-widest drop-shadow-2xl">三百年香火 · 守護員林</h2>
                 </div>
-                <div class="absolute inset-0 flex items-center justify-center text-gray-700 italic">【ZJ影像 專業視覺嵌入區】</div>
+                <div class="absolute inset-0 flex items-center justify-center text-gray-700 italic">【ZJ影像 專業作品展示區】</div>
             </div>
-            
-            <h3 class="text-2xl font-black text-t-blue mb-8 border-l-4 border-t-gold pl-4 italic">開放祈福項目</h3>
+            <h3 class="text-2xl font-black text-t-blue mb-8 border-l-4 border-t-gold pl-4 italic">目前開放祈福項目</h3>
             <div id="service-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
         </section>
 
         <section id="news" class="page-section max-w-4xl mx-auto py-10">
-            <h2 class="text-4xl font-black text-t-blue mb-10 text-center">最新消息</h2>
-            <div id="display-news-list" class="space-y-6"></div>
+            <h2 class="text-3xl font-black text-t-blue mb-10 text-center">最新消息公告</h2>
+            <div id="display-news" class="space-y-6"></div>
         </section>
 
         <section id="gallery" class="page-section max-w-6xl mx-auto py-10">
-            <h2 class="text-4xl font-black text-t-blue mb-10 text-center">活動花絮照片</h2>
-            <div id="display-photo-wall" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            <h2 class="text-3xl font-black text-t-blue mb-10 text-center">活動花絮照片</h2>
+            <div id="display-photos" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
-
-        <section id="video" class="page-section max-w-6xl mx-auto py-10">
-            <h2 class="text-4xl font-black text-t-blue mb-10 text-center">影音專區</h2>
-            <div id="display-video-wall" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div>
-        </section>
-
-        </main>
+    </main>
 
     <script>
         const firebaseConfig = {
@@ -93,58 +79,33 @@
             window.scrollTo(0, 0);
         }
 
-        // --- 全頻道即時同步邏輯 ---
-        
-        // 1. 同步消息
+        // --- 全頻道即時監聽 (前台自動同步) ---
         db.collection("news").orderBy("createdAt", "desc").onSnapshot(snap => {
-            let html = "";
-            snap.forEach(doc => {
+            let html = ""; snap.forEach(doc => {
                 const n = doc.data();
-                html += `<div class="bg-white p-8 rounded-3xl shadow-sm border-l-8 border-t-red">
-                    <h4 class="font-bold text-xl mb-3">${n.title}</h4>
+                html += `<div class="bg-white p-8 rounded-3xl shadow-sm border-l-8 border-t-red font-serif">
+                    <h4 class="font-bold text-xl mb-3 text-t-blue">${n.title}</h4>
                     <p class="text-slate-600 leading-relaxed">${n.content}</p>
                 </div>`;
             });
-            document.getElementById('display-news-list').innerHTML = html || '<p class="text-center text-slate-400">目前尚無消息</p>';
+            document.getElementById('display-news').innerHTML = html;
         });
 
-        // 2. 同步祈福項目
         db.collection("services").onSnapshot(snap => {
-            let html = "";
-            snap.forEach(doc => {
+            let html = ""; snap.forEach(doc => {
                 const s = doc.data();
                 html += `<div class="bg-white p-8 rounded-3xl shadow-sm border-t-4 border-t-gold text-center">
-                    <h4 class="font-bold text-xl mb-2">${s.name}</h4>
-                    <p class="text-t-red font-black text-2xl">$${s.price}</p>
+                    <h4 class="font-bold text-xl mb-2">${s.name}</h4><p class="text-t-red font-black text-2xl">$${s.price}</p>
                 </div>`;
             });
             document.getElementById('service-grid').innerHTML = html;
         });
 
-        // 3. 同步照片
         db.collection("photos").orderBy("createdAt", "desc").onSnapshot(snap => {
-            let html = "";
-            snap.forEach(doc => {
-                html += `<div class="rounded-3xl overflow-hidden shadow-lg border-4 border-white aspect-square">
-                    <img src="${doc.data().url}" class="w-full h-full object-cover">
-                </div>`;
+            let html = ""; snap.forEach(doc => {
+                html += `<div class="rounded-3xl overflow-hidden shadow-lg border-4 border-white aspect-square"><img src="${doc.data().url}" class="w-full h-full object-cover"></div>`;
             });
-            document.getElementById('display-photo-wall').innerHTML = html;
-        });
-
-        // 4. 同步影片
-        db.collection("videos").orderBy("createdAt", "desc").onSnapshot(snap => {
-            let html = "";
-            snap.forEach(doc => {
-                const v = doc.data();
-                html += `<div>
-                    <div class="aspect-video bg-black rounded-2xl overflow-hidden shadow-xl mb-4">
-                        <iframe class="w-full h-full" src="https://www.youtube.com/embed/${v.ytid}" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                    <h4 class="font-bold text-xl">${v.title}</h4>
-                </div>`;
-            });
-            document.getElementById('display-video-wall').innerHTML = html;
+            document.getElementById('display-photos').innerHTML = html;
         });
     </script>
 </body>
