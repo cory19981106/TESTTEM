@@ -1,110 +1,26 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>廣寧宮管理系統 | 登入驗證</title>
+    <meta charset="UTF-8"><title>廣寧宮管理系統 | 登入</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
-
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #0f172a; }
-        .login-card { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
-
-    <div class="login-card bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl w-full max-w-md text-center">
-        <div class="w-20 h-20 bg-[#8B0000] rounded-full flex items-center justify-center text-white font-black mx-auto mb-8 shadow-xl text-3xl border-4 border-white">廣</div>
-        
-        <h2 class="text-3xl font-black text-slate-800 mb-2 tracking-tighter">後台管理登入</h2>
-        <p class="text-slate-400 text-xs mb-10 uppercase tracking-[0.2em] font-bold">ZJ AD FILM Secure Portal</p>
-        
-        <div class="space-y-5 text-left">
-            <div>
-                <label class="text-xs font-bold text-slate-400 ml-2 mb-2 block">管理員信箱</label>
-                <input type="email" id="email" placeholder="example@mail.com" class="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 focus:bg-white bg-slate-50 transition-all">
-            </div>
-            
-            <div>
-                <label class="text-xs font-bold text-slate-400 ml-2 mb-2 block">密碼</label>
-                <input type="password" id="password" placeholder="••••••••" class="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 focus:bg-white bg-slate-50 transition-all">
-            </div>
-
-            <button onclick="handleLogin()" id="login-btn" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black shadow-2xl hover:bg-black active:scale-[0.98] transition-all mt-4 flex items-center justify-center">
-                <span id="btn-text">驗證並進入系統</span>
-                <i id="btn-spinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
-            </button>
-        </div>
-        
-        <p class="mt-8 text-[10px] text-slate-300">本系統僅供員林廣寧宮授權人員使用</p>
+<body class="bg-slate-900 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl w-full max-w-md text-center">
+        <div class="w-16 h-16 bg-[#8B0000] rounded-full flex items-center justify-center text-white font-black mx-auto mb-6 text-2xl shadow-lg">廣</div>
+        <h2 class="text-2xl font-black text-slate-800 mb-8 tracking-tighter">後台管理系統登入</h2>
+        <input type="email" id="email" placeholder="管理員信箱" class="w-full border-2 border-slate-100 p-4 rounded-2xl mb-4 outline-none focus:border-blue-500 transition">
+        <input type="password" id="password" placeholder="密碼" class="w-full border-2 border-slate-100 p-4 rounded-2xl mb-6 outline-none focus:border-blue-500 transition">
+        <button onclick="handleLogin()" id="btn" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold shadow-xl hover:bg-black transition">驗證並進入</button>
     </div>
-
     <script>
-        // 1. Firebase 初始化 (確認與你的專案對齊)
-        const firebaseConfig = {
-            apiKey: "AIzaSyB2PuFt4epkjrkEByoSEqcw88eAVuxjB70",
-            authDomain: "testproject-fb870.firebaseapp.com",
-            projectId: "testproject-fb870",
-            storageBucket: "testproject-fb870.firebasestorage.app",
-            messagingSenderId: "164908049871",
-            appId: "1:164908049871:web:21e77c3bb591de85685eba"
-        };
+        const firebaseConfig = { apiKey: "AIzaSyB2PuFt4epkjrkEByoSEqcw88eAVuxjB70", authDomain: "testproject-fb870.firebaseapp.com", projectId: "testproject-fb870", storageBucket: "testproject-fb870.firebasestorage.app", messagingSenderId: "164908049871", appId: "1:164908049871:web:21e77c3bb591de85685eba" };
         firebase.initializeApp(firebaseConfig);
-
-        const auth = firebase.auth();
-
-        // 2. 登入邏輯
         async function handleLogin() {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const btn = document.getElementById('login-btn');
-            const btnText = document.getElementById('btn-text');
-            const spinner = document.getElementById('btn-spinner');
-
-            if (!email || !password) {
-                alert("請填寫帳號及密碼！");
-                return;
-            }
-
-            // 進入載入狀態
-            btn.disabled = true;
-            btnText.innerText = "驗證身分中";
-            spinner.classList.remove('hidden');
-
-            try {
-                // Firebase 驗證
-                await auth.signInWithEmailAndPassword(email, password);
-                
-                // 登入成功後跳轉 (使用相對路徑防止 GitHub Pages 報錯)
-                window.location.replace("./admin.html");
-                
-            } catch (error) {
-                console.error("Login Error:", error);
-                let message = "登入失敗，請確認帳號密碼。";
-                
-                if (error.code === 'auth/user-not-found') message = "此帳號不存在。";
-                if (error.code === 'auth/wrong-password') message = "密碼輸入錯誤。";
-                if (error.code === 'auth/too-many-requests') message = "嘗試次數過多，請稍後再試。";
-                
-                alert(message);
-                
-                // 恢復按鈕狀態
-                btn.disabled = false;
-                btnText.innerText = "驗證並進入系統";
-                spinner.classList.add('hidden');
-            }
+            const e = document.getElementById('email').value; const p = document.getElementById('password').value;
+            try { await firebase.auth().signInWithEmailAndPassword(e, p); window.location.href = "admin.html"; } catch (err) { alert("驗證失敗：帳號或密碼錯誤"); }
         }
-
-        // 監聽 Enter 鍵直接登入
-        document.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') handleLogin();
-        });
     </script>
 </body>
 </html>
