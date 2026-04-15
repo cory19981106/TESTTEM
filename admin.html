@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>廣寧宮後台 | 專業管理維護系統</title>
+    <title>廣寧宮管理後台 | 終極修復維護系統</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -17,129 +17,112 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Noto+Serif+TC:wght@900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f0f4f8; overflow: hidden; }
         
-        :root {
-            --t-red: #8B0000;
-            --t-gold: #D4AF37;
-            --sidebar-bg: #0F172A;
-        }
-
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow: hidden; }
+        .admin-panel { display: none; height: calc(100vh - 120px); overflow-y: auto; padding-right: 10px; }
+        .admin-panel.active { display: block; animation: slideIn 0.3s ease-out; }
         
-        /* 側邊欄美化 */
-        .sidebar { background: var(--sidebar-bg); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .nav-btn { @apply flex items-center w-full px-6 py-4 text-slate-400 transition-all duration-300 border-l-4 border-transparent hover:bg-white/5 hover:text-white; }
-        .nav-btn.active { @apply bg-white/10 border-yellow-500 text-white font-bold shadow-[inset_0_0_20px_rgba(255,255,255,0.05)]; }
-        .nav-btn i { @apply w-8 text-xl opacity-70; }
-
-        /* 面板與捲動 */
-        .admin-panel { display: none; height: calc(100vh - 100px); overflow-y: auto; padding-right: 8px; }
-        .admin-panel.active { display: block; animation: panelFadeIn 0.4s ease-out; }
+        .nav-btn { @apply flex items-center w-full px-6 py-4 text-slate-400 transition-all duration-300 border-l-4 border-transparent; }
+        .nav-btn:hover { @apply bg-slate-800 text-white; }
+        .nav-btn.active { @apply bg-slate-800 border-yellow-500 text-white font-bold shadow-lg; }
         
-        /* 表格與卡片設計 */
-        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); }
-        .data-table thead th { @apply sticky top-0 bg-slate-50/90 backdrop-blur z-10 p-5 text-slate-500 font-black uppercase tracking-tighter text-xs border-b border-slate-200; }
-        .data-table tbody tr { @apply transition-colors hover:bg-blue-50/30; }
-
-        /* 疏文資訊小卡 */
-        .lunar-badge { background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); border-left: 4px solid #3B82F6; }
-
-        @keyframes panelFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .edit-mode { @apply ring-8 ring-orange-500/20 bg-orange-50 border-orange-200; }
         
-        /* 捲動條 */
-        ::-webkit-scrollbar { width: 5px; }
+        /* 捲動條優化 */
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .table-container { @apply bg-white rounded-[2rem] border border-slate-200 shadow-xl overflow-hidden; }
     </style>
 </head>
 <body class="flex min-h-screen">
 
-    <aside class="sidebar w-72 h-screen sticky top-0 flex flex-col z-50 shadow-2xl">
-        <div class="p-10 text-center">
-            <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 text-slate-900 rounded-2xl flex items-center justify-center text-3xl font-black mx-auto mb-4 shadow-[0_10px_20px_rgba(212,175,55,0.3)]">廣</div>
-            <h2 class="text-xl font-black tracking-widest text-white font-serif">廣寧宮管理</h2>
-            <p class="text-[9px] mt-2 text-yellow-500/60 uppercase font-black tracking-[0.2em]">Professional CRM v3.5</p>
+    <aside class="w-72 bg-slate-900 text-white h-screen sticky top-0 flex flex-col z-50 shadow-2xl">
+        <div class="p-10 text-center border-b border-slate-800">
+            <div class="w-16 h-16 bg-yellow-500 text-slate-900 rounded-2xl flex items-center justify-center text-3xl font-black mx-auto mb-4 shadow-lg">廣</div>
+            <h2 class="text-xl font-black tracking-widest text-yellow-500">廣寧宮管理</h2>
+            <p class="text-[10px] mt-2 opacity-40 uppercase font-bold tracking-tighter">Guangning Temple System v3.0</p>
         </div>
         
-        <nav class="mt-4 flex-1 space-y-1">
+        <nav class="mt-6 flex-1 space-y-1 overflow-y-auto">
             <button onclick="showPanel('orders')" id="btn-orders" class="nav-btn">
-                <i class="fas fa-file-invoice-dollar"></i> 財務核帳報表
+                <i class="fas fa-file-invoice-dollar w-8 text-xl"></i> 財務核帳報表
             </button>
             <button onclick="showPanel('news')" id="btn-news" class="nav-btn">
-                <i class="fas fa-bullhorn"></i> 最新消息管理
+                <i class="fas fa-bullhorn w-8 text-xl"></i> 最新消息管理
             </button>
             <button onclick="showPanel('products')" id="btn-products" class="nav-btn">
-                <i class="fas fa-box-open"></i> 文創商品管理
+                <i class="fas fa-box-open w-8 text-xl"></i> 文創商品管理
             </button>
             <button onclick="showPanel('services')" id="btn-services" class="nav-btn">
-                <i class="fas fa-tags"></i> 祈福項目設定
+                <i class="fas fa-tags w-8 text-xl"></i> 祈福項目設定
             </button>
             <button onclick="showPanel('videos')" id="btn-videos" class="nav-btn">
-                <i class="fas fa-play-circle"></i> 影音作品管理
+                <i class="fas fa-play-circle w-8 text-xl"></i> 影音專區管理
             </button>
             <button onclick="showPanel('photos')" id="btn-photos" class="nav-btn">
-                <i class="fas fa-camera-retro"></i> 照片花絮維護
+                <i class="fas fa-images w-8 text-xl"></i> 照片花絮維護
             </button>
         </nav>
 
-        <div class="p-6">
-            <button onclick="handleLogout()" class="w-full bg-red-500/10 hover:bg-red-600 text-red-500 hover:text-white py-4 rounded-2xl text-xs font-black transition-all flex items-center justify-center gap-3 border border-red-500/20 group">
-                <i class="fas fa-power-off group-hover:scale-110 transition"></i> 徹底登出系統
+        <div class="p-6 border-t border-slate-800">
+            <button onclick="handleLogout()" class="w-full bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white py-4 rounded-2xl text-sm font-black transition-all flex items-center justify-center gap-2 border border-red-600/30">
+                <i class="fas fa-sign-out-alt"></i> 登出系統
             </button>
         </div>
     </aside>
 
-    <main class="flex-1 p-10 overflow-hidden flex flex-col">
-        
-        <header class="flex justify-between items-center mb-8">
-            <div>
-                <h2 id="main-title" class="text-3xl font-black text-slate-800 tracking-tight">管理面板</h2>
-                <p id="current-date" class="text-xs text-slate-400 font-bold mt-1"></p>
+    <main class="flex-1 p-12 overflow-hidden">
+        <div class="flex justify-between items-center mb-10">
+            <h2 id="main-title" class="text-4xl font-black text-slate-800 tracking-tighter">管理看板</h2>
+            <div id="auth-status" class="text-xs font-bold text-slate-400 bg-white px-4 py-2 rounded-full border shadow-sm flex items-center gap-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> 連線中
             </div>
-            <div class="flex items-center gap-4">
-                <div class="bg-white px-4 py-2 rounded-2xl border shadow-sm flex items-center gap-3">
-                    <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></span>
-                    <span class="text-xs font-black text-slate-500 uppercase tracking-widest">系統已連線</span>
-                </div>
-            </div>
-        </header>
+        </div>
 
-        <section id="panel-orders" class="admin-panel">
-            <div class="glass-card p-6 rounded-[2.5rem] shadow-sm border border-slate-200 mb-8 flex flex-wrap gap-4 items-end">
-                <div class="flex-1 min-w-[280px]">
-                    <label class="text-[10px] font-black text-slate-400 block mb-2 uppercase tracking-widest ml-1">搜尋信眾資訊</label>
-                    <input type="text" id="o-search" oninput="renderOrders()" class="w-full border-2 border-slate-100 p-3 rounded-2xl text-sm outline-none focus:border-yellow-500 bg-white shadow-inner transition-all" placeholder="輸入姓名、電話或項目...">
-                </div>
-                <div class="flex gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-slate-400 block mb-2 uppercase tracking-widest ml-1">起始</label>
-                        <input type="date" id="o-start" class="border-2 border-slate-100 p-3 rounded-2xl text-sm bg-white outline-none">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-slate-400 block mb-2 uppercase tracking-widest ml-1">結束</label>
-                        <input type="date" id="o-end" class="border-2 border-slate-100 p-3 rounded-2xl text-sm bg-white outline-none">
+        <section id="panel-orders" class="admin-panel active">
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-200 mb-8 flex flex-wrap gap-6 items-end">
+                <div class="flex-1 min-w-[300px]">
+                    <label class="text-xs font-black text-slate-400 block mb-2 uppercase ml-1">快速搜尋信眾 (姓名或電話)</label>
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                        <input type="text" id="o-search" oninput="renderOrders()" class="w-full border-2 border-slate-100 p-3.5 pl-12 rounded-2xl text-sm outline-none focus:border-blue-500 bg-slate-50 transition-all" placeholder="請輸入關鍵字...">
                     </div>
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="renderOrders()" class="bg-slate-800 text-white px-6 py-3 rounded-2xl font-black text-sm hover:bg-black transition shadow-lg">篩選</button>
-                    <button onclick="exportExcel()" class="bg-green-600 text-white px-6 py-3 rounded-2xl font-black text-sm hover:bg-green-700 transition shadow-lg flex items-center gap-2">
-                        <i class="fas fa-file-export"></i> 匯出 Excel
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs font-black text-slate-400 block mb-2 uppercase ml-1">起始日期</label>
+                        <input type="date" id="o-start" class="border-2 border-slate-100 p-3 rounded-2xl text-sm bg-slate-50 outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs font-black text-slate-400 block mb-2 uppercase ml-1">結束日期</label>
+                        <input type="date" id="o-end" class="border-2 border-slate-100 p-3 rounded-2xl text-sm bg-slate-50 outline-none">
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="renderOrders()" class="bg-slate-800 text-white px-8 py-3.5 rounded-2xl font-black text-sm hover:bg-black transition shadow-lg">篩選資料</button>
+                    <button onclick="exportExcel()" class="bg-green-600 text-white px-8 py-3.5 rounded-2xl font-black text-sm hover:bg-green-700 transition shadow-lg flex items-center gap-2">
+                        <i class="fas fa-file-excel"></i> 匯出報表
                     </button>
                 </div>
             </div>
 
-            <div class="bg-white rounded-[2.5rem] border border-slate-200 shadow-2xl overflow-hidden">
-                <table class="data-table w-full text-left text-sm border-collapse">
-                    <thead>
+            <div class="table-container">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead class="bg-slate-50 font-black text-slate-500 uppercase tracking-widest border-b">
                         <tr>
-                            <th>登記日期</th>
-                            <th>類別</th>
-                            <th>信眾資訊 / 農曆生辰</th>
-                            <th>祈福項目</th>
-                            <th class="text-right">金額</th>
-                            <th class="text-center">狀態</th>
-                            <th class="text-right">管理</th>
+                            <th class="p-6">登記日期</th>
+                            <th class="p-6">類別</th>
+                            <th class="p-6">信眾與生辰(農曆)資訊</th>
+                            <th class="p-6">項目</th>
+                            <th class="p-6 text-right">金額</th>
+                            <th class="p-6 text-center">狀態</th>
+                            <th class="p-6 text-right">管理</th>
                         </tr>
                     </thead>
                     <tbody id="order-rows" class="divide-y divide-slate-100">
@@ -149,62 +132,67 @@
         </section>
 
         <section id="panel-news" class="admin-panel">
-            <div id="n-form-box" class="glass-card p-10 rounded-[3rem] border border-slate-200 mb-10 max-w-4xl shadow-xl transition-all">
+            <div id="n-form-box" class="bg-white p-10 rounded-[3rem] border border-slate-200 mb-10 max-w-4xl shadow-xl transition-all">
                 <input type="hidden" id="n-id">
-                <h3 id="n-label" class="font-black text-slate-400 mb-6 text-xs uppercase tracking-[0.3em]">發布最新公告</h3>
+                <h3 id="n-label" class="font-black text-slate-400 mb-6 text-xs uppercase tracking-[0.3em]">發布最新宮務公告</h3>
                 <div class="space-y-6">
-                    <input type="text" id="n-title" placeholder="請輸入標題" class="w-full border-2 border-slate-100 p-5 rounded-3xl outline-none focus:border-blue-400 bg-white font-bold text-lg">
-                    <textarea id="n-content" placeholder="內容..." class="w-full border-2 border-slate-100 p-5 rounded-3xl h-60 outline-none focus:border-blue-400 bg-white leading-relaxed"></textarea>
+                    <input type="text" id="n-title" placeholder="請輸入公告標題" class="w-full border-2 border-slate-50 p-5 rounded-2xl outline-none focus:border-blue-200 bg-slate-50 font-bold text-lg">
+                    <textarea id="n-content" placeholder="請輸入詳細公告內容..." class="w-full border-2 border-slate-50 p-5 rounded-2xl h-60 outline-none focus:border-blue-200 bg-slate-50 leading-relaxed"></textarea>
                     <div class="flex gap-4">
-                        <button onclick="saveNews()" id="n-btn" class="flex-1 bg-blue-600 text-white py-5 rounded-full font-black shadow-2xl hover:bg-blue-700 transition">確認發布</button>
-                        <button onclick="clearNewsForm()" id="n-cancel" class="hidden px-12 bg-slate-200 py-5 rounded-full font-black text-slate-600">取消</button>
+                        <button onclick="saveNews()" id="n-btn" class="flex-1 bg-blue-600 text-white py-5 rounded-3xl font-black shadow-2xl hover:bg-blue-700 transition">確認存檔並發布</button>
+                        <button onclick="clearNewsForm()" id="n-cancel" class="hidden px-12 bg-slate-200 py-5 rounded-3xl font-black text-slate-600">取消編輯</button>
                     </div>
                 </div>
             </div>
             <div id="admin-news-list" class="space-y-4 max-w-4xl"></div>
         </section>
 
-        <section id="panel-products" class="admin-panel"><div id="prod-form-box" class="glass-card p-8 rounded-[2.5rem] border mb-10 shadow-lg max-w-2xl"><input type="hidden" id="prod-id"><div class="grid grid-cols-2 gap-4 mb-4"><input type="text" id="prod-name" placeholder="商品名稱" class="border p-4 rounded-2xl bg-white"><input type="number" id="prod-price" placeholder="價格" class="border p-4 rounded-2xl bg-white"></div><input type="file" id="prod-file" class="w-full border-2 border-dashed p-6 rounded-2xl mb-4 bg-slate-50"><button onclick="saveProduct()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black shadow-xl hover:bg-black transition">儲存文創商品</button></div><div id="admin-prod-list" class="grid grid-cols-1 md:grid-cols-4 gap-6"></div></section>
+        <section id="panel-products" class="admin-panel"><div id="prod-form-box" class="bg-white p-8 rounded-[2.5rem] border mb-10 shadow-lg max-w-2xl"><input type="hidden" id="prod-id"><div class="grid grid-cols-2 gap-4 mb-4"><input type="text" id="prod-name" placeholder="商品名稱" class="border p-4 rounded-xl bg-slate-50"><input type="number" id="prod-price" placeholder="價格" class="border p-4 rounded-xl bg-slate-50"></div><input type="file" id="prod-file" class="w-full border-2 border-dashed p-6 rounded-xl mb-4"><button onclick="saveProduct()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black shadow-xl">更新文創商品清單</button></div><div id="admin-prod-list" class="grid grid-cols-4 gap-6"></div></section>
         
-        <section id="panel-services" class="admin-panel"><div id="s-form-box" class="glass-card p-8 rounded-[2.5rem] border mb-8 max-w-md shadow-lg"><input type="hidden" id="s-id"><div class="space-y-4"><input type="text" id="s-name" placeholder="祈福名稱" class="w-full border p-4 rounded-2xl"><input type="number" id="s-price" placeholder="價格" class="w-full border p-4 rounded-2xl"><button onclick="saveService()" class="w-full bg-yellow-600 text-white py-4 rounded-2xl font-black shadow-lg">新增服務項目</button></div></div><div id="admin-serv-list" class="grid gap-4 max-w-2xl"></div></section>
+        <section id="panel-services" class="admin-panel"><div id="s-form-box" class="bg-white p-8 rounded-[2.5rem] border mb-8 max-w-md shadow-lg"><input type="hidden" id="s-id"><div class="space-y-4"><input type="text" id="s-name" placeholder="項目名稱" class="w-full border p-4 rounded-xl"><input type="number" id="s-price" placeholder="價格設定" class="w-full border p-4 rounded-xl"><button onclick="saveService()" class="w-full bg-yellow-600 text-white py-4 rounded-xl font-bold">儲存項目</button></div></div><div id="admin-serv-list" class="grid gap-4 max-w-2xl"></div></section>
 
-        <section id="panel-videos" class="admin-panel"><div class="glass-card p-8 rounded-[2.5rem] border mb-10 max-w-xl shadow-lg"><input type="text" id="v-title" placeholder="影片說明" class="w-full border p-4 rounded-2xl mb-4"><input type="text" id="v-ytid" placeholder="YouTube 影片 ID" class="w-full border p-4 rounded-2xl mb-6"><button onclick="saveVideo()" class="w-full bg-red-600 text-white py-4 rounded-2xl font-black shadow-lg hover:bg-red-700 transition">上傳影片資料</button></div><div id="admin-video-list" class="space-y-4 max-w-3xl"></div></section>
+        <section id="panel-videos" class="admin-panel"><div class="bg-white p-8 rounded-[2.5rem] border mb-10 max-w-xl shadow-lg"><input type="text" id="v-title" placeholder="影片名稱" class="w-full border p-4 rounded-xl mb-4"><input type="text" id="v-ytid" placeholder="YouTube ID" class="w-full border p-4 rounded-xl mb-6"><button onclick="saveVideo()" class="w-full bg-red-600 text-white py-4 rounded-xl font-bold shadow-lg">新增影片</button></div><div id="admin-video-list" class="space-y-4 max-w-2xl"></div></section>
         
-        <section id="panel-photos" class="admin-panel"><div class="glass-card p-8 rounded-[2.5rem] border mb-10 max-w-xl shadow-lg"><input type="text" id="p-title" placeholder="照片主題" class="w-full border p-4 rounded-2xl mb-4"><input type="file" id="p-file" class="w-full mb-4 text-xs"><div id="p-prog" class="hidden w-full bg-slate-100 h-3 rounded-full mb-6 overflow-hidden shadow-inner"><div id="p-bar" class="bg-blue-600 h-full w-0 transition-all duration-500"></div></div><button onclick="uploadPhoto()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black shadow-xl transition hover:bg-black">開始上傳</button></div><div id="admin-photo-grid" class="grid grid-cols-2 md:grid-cols-5 gap-4"></div></section>
+        <section id="panel-photos" class="admin-panel"><div class="bg-white p-8 rounded-[2.5rem] border mb-10 max-w-xl shadow-lg"><input type="text" id="p-title" placeholder="照片主題" class="w-full border p-4 rounded-xl mb-4"><input type="file" id="p-file" class="w-full mb-4 text-xs"><div id="p-prog" class="hidden w-full bg-slate-100 h-3 rounded-full mb-6 overflow-hidden"><div id="p-bar" class="bg-blue-600 h-full w-0 transition-all duration-500"></div></div><button onclick="uploadPhoto()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black">上傳至花絮牆</button></div><div id="admin-photo-grid" class="grid grid-cols-5 gap-4"></div></section>
 
     </main>
 
     <script>
-        // --- 1. Firebase 配置 ---
+        // --- 1. Firebase 初始化 ---
         const firebaseConfig = { apiKey: "AIzaSyB2PuFt4epkjrkEByoSEqcw88eAVuxjB70", authDomain: "testproject-fb870.firebaseapp.com", projectId: "testproject-fb870", storageBucket: "testproject-fb870.firebasestorage.app", messagingSenderId: "164908049871", appId: "1:164908049871:web:21e77c3bb591de85685eba" };
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore(); const storage = firebase.storage(); const auth = firebase.auth();
+        const db = firebase.firestore(); 
+        const storage = firebase.storage();
+        const auth = firebase.auth();
         let orders = [];
 
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString('zh-TW', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-        // --- 2. 核心修復：徹底登出與權限監控 ---
+        // --- 2. 登入狀態監控 ---
         auth.onAuthStateChanged(user => {
             if (!user) {
-                console.log("當前未登入");
-                // 實際上線請將下方註解打開
+                console.warn("偵測到已登出，跳轉登入頁面...");
+                // 實際上線請取消下方註解
                 // window.location.replace("login.html");
             } else {
-                const activeTab = localStorage.getItem('backend_tab') || 'orders';
-                showPanel(activeTab);
+                console.log("登入成功，歡迎管理員");
+                const lastTab = localStorage.getItem('active_tab') || 'orders';
+                showPanel(lastTab);
             }
         });
 
+        // --- 3. 徹底登出邏輯 (修復點) ---
         function handleLogout() {
-            if (confirm("🚨 警告：登出後將清除此瀏覽器的所有管理授權，確定執行？")) {
+            if (confirm("🚨 注意：確定要安全登出管理系統並清除所有存取權限嗎？")) {
                 auth.signOut().then(() => {
-                    localStorage.clear(); sessionStorage.clear();
+                    // 關鍵：清除所有暫存避免登入狀態殘留
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    // 重新導向並確保無法透過上一頁返回
                     window.location.replace("login.html");
-                }).catch(err => alert("登出發生錯誤：" + err.message));
+                }).catch(err => alert("登出失敗：" + err.message));
             }
         }
 
-        // --- 3. UI 控制 ---
+        // --- 4. 面板切換與導航 ---
         function showPanel(id) {
             document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -215,132 +203,153 @@
             const btn = document.getElementById('btn-' + id);
             if (btn) btn.classList.add('active');
             
-            localStorage.setItem('backend_tab', id);
+            localStorage.setItem('active_tab', id);
+            const titleMap = { 'orders':'財務核帳', 'news':'公告管理', 'products':'文創商品', 'services':'項目設定', 'videos':'影音作品', 'photos':'活動照片' };
+            document.getElementById('main-title').innerText = titleMap[id] || "管理看板";
         }
 
-        // --- 4. [修復點：終極農曆解析邏輯] ---
-        function safeLunarParser(data) {
-            // A. 先看有沒有存好的欄位
+        // --- 5. [核心：強大農曆轉換邏輯 (修復點)] ---
+        function getLunarSafe(data) {
+            // 優先嘗試讀取資料庫已存的農曆
             if (data.lunarBirthday && data.lunarBirthday !== "未轉換") return data.lunarBirthday;
             
-            // B. 抓取可能的國曆欄位
-            let solarValue = data.solarBirthday || data.birthday;
-            if (!solarValue) return "無生辰資訊";
+            // 抓取國曆資訊 (相容不同欄位名稱)
+            let solarStr = data.solarBirthday || data.birthday;
+            
+            // 如果連國曆都沒有，回傳無資料
+            if (!solarStr) return "無生辰資訊";
 
             try {
                 let y, m, d;
-                // 情況 1: 字串型 YYYY-MM-DD
-                if (typeof solarValue === 'string') {
-                    // 正則過濾掉非數字字元，確保乾淨的 [y,m,d]
-                    const cleanParts = solarValue.match(/\d+/g);
-                    if (!cleanParts || cleanParts.length < 3) return "日期格式不詳";
-                    y = parseInt(cleanParts[0]);
-                    m = parseInt(cleanParts[1]);
-                    d = parseInt(cleanParts[2]);
+                // 處理字串格式 (YYYY-MM-DD)
+                if (typeof solarStr === 'string' && solarStr.includes('-')) {
+                    const p = solarStr.split('-');
+                    y = parseInt(p[0]); m = parseInt(p[1]); d = parseInt(p[2]);
                 } 
-                // 情況 2: Firebase Timestamp 物件
-                else if (solarValue.toDate) {
-                    const dt = solarValue.toDate();
+                // 處理 Firebase Timestamp 物件
+                else if (solarStr.toDate) {
+                    const dt = solarStr.toDate();
                     y = dt.getFullYear(); m = dt.getMonth() + 1; d = dt.getDate();
                 } else {
-                    return "不支援的資料格式";
+                    return "格式不支援";
                 }
 
-                // 強力執行：使用 fromYmd 排除所有時區偏移問題
+                // 核心轉換：Solar -> Lunar
                 const solar = Solar.fromYmd(y, m, d);
                 const lunar = solar.getLunar();
                 return `${lunar.getYearInGanZhi()}年(${lunar.getYearZodiac()}) ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`;
-            } catch (error) {
-                console.error("農曆轉換失敗:", error);
-                return "轉換異常";
+            } catch (e) {
+                console.error("轉換失敗", e);
+                return "日期解析錯誤";
             }
         }
 
-        // --- 5. 財務核帳數據渲染 ---
+        // --- 6. 訂單數據展示與篩選 ---
         db.collection("orders").orderBy("createdAt", "desc").onSnapshot(snap => {
             orders = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             renderOrders();
         });
 
         function renderOrders() {
-            const kw = document.getElementById('o-search').value.toLowerCase();
+            const keyword = document.getElementById('o-search').value.toLowerCase();
             const start = document.getElementById('o-start').value;
             const end = document.getElementById('o-end').value;
 
             let filtered = orders.filter(o => {
-                const searchMatch = (o.name || "").includes(kw) || (o.phone || "").includes(kw) || (o.item || "").includes(kw);
+                const nameMatch = (o.name || "").toLowerCase().includes(keyword);
+                const phoneMatch = (o.phone || "").includes(keyword);
                 let dateMatch = true;
                 if (start && o.createdAt) dateMatch = o.createdAt.toDate() >= new Date(start);
-                if (end && o.createdAt) { let e = new Date(end); e.setHours(23,59,59); dateMatch = dateMatch && o.createdAt.toDate() <= e; }
-                return searchMatch && dateMatch;
+                if (end && o.createdAt) {
+                    let eDate = new Date(end); eDate.setHours(23, 59, 59);
+                    dateMatch = dateMatch && o.createdAt.toDate() <= eDate;
+                }
+                return (nameMatch || phoneMatch) && dateMatch;
             });
 
             let html = "";
             filtered.forEach(o => {
-                const done = o.status === '已查帳';
-                const lunar = safeLunarParser(o); // 調用加固後的解析器
+                const isChecked = o.status === '已查帳';
+                const lunarResult = getLunarSafe(o); // 調用核心強大轉換函數
 
                 html += `
-                <tr class="border-b border-slate-50">
-                    <td class="p-6 text-slate-400 font-mono text-[10px] leading-tight">${o.createdAt ? o.createdAt.toDate().toLocaleString() : '-'}</td>
-                    <td class="p-6">
-                        <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${o.category==='捐獻'?'bg-red-50 text-red-600 border border-red-100':'bg-blue-50 text-blue-600 border border-blue-100'}">${o.category}</span>
+                <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                    <td class="p-6 text-slate-400 font-mono text-[11px] leading-tight">
+                        ${o.createdAt ? o.createdAt.toDate().toLocaleString() : '-'}
                     </td>
                     <td class="p-6">
-                        <div class="font-black text-slate-800 text-base mb-1">${o.name || '未名'}</div>
-                        <div class="text-xs text-slate-400 font-mono mb-3"><i class="fas fa-phone-alt mr-1 scale-75 opacity-50"></i>${o.phone || '無'}</div>
-                        <div class="lunar-badge p-4 rounded-2xl shadow-sm text-[11px] leading-relaxed">
-                            <p class="text-blue-800 font-black mb-1 tracking-tight">⛩️ 農曆：${lunar}</p>
-                            <p class="text-slate-500 font-bold italic opacity-70">📅 國曆：${o.solarBirthday || o.birthday || '未填'}</p>
+                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase ${o.category === '捐獻' ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600'}">
+                            ${o.category}
+                        </span>
+                    </td>
+                    <td class="p-6">
+                        <div class="font-black text-slate-800 text-base mb-1">${o.name || '未填'}</div>
+                        <div class="text-xs text-slate-400 font-mono mb-2">${o.phone || '未填'}</div>
+                        <div class="p-4 bg-white rounded-2xl border-2 border-blue-50 shadow-inner text-[11px] leading-relaxed">
+                            <p class="text-blue-700 font-black mb-1">⛩️ 農曆：${lunarResult}</p>
+                            <p class="text-slate-500 font-bold italic">📅 國曆：${o.solarBirthday || o.birthday || '未填'}</p>
                             <p class="text-slate-500 font-bold">⏰ 時辰：${o.birthHour || '吉時'}</p>
                         </div>
                     </td>
-                    <td class="p-6 text-slate-600 font-black text-sm">${o.item || '一般功德'}</td>
+                    <td class="p-6 text-slate-600 font-black text-sm">${o.item || '一般項目'}</td>
                     <td class="p-6 text-right font-black text-xl text-slate-900 tracking-tighter">$${o.amount || 0}</td>
                     <td class="p-6 text-center">
-                        <button onclick="toggleCheck('${o.id}', '${o.status}')" class="px-5 py-2 rounded-full text-[10px] font-black border-2 transition-all ${done ? 'bg-green-600 text-white border-green-600 shadow-lg' : 'bg-white text-yellow-600 border-yellow-200 hover:bg-yellow-50'}">
+                        <button onclick="toggleCheck('${o.id}', '${o.status}')" class="px-6 py-2 rounded-full text-[11px] font-black border-2 transition-all ${isChecked ? 'bg-green-600 text-white border-green-600' : 'bg-white text-yellow-600 border-yellow-200 hover:bg-yellow-50'}">
                             ${o.status || '待核帳'}
                         </button>
                     </td>
                     <td class="p-6 text-right">
-                        <button onclick="deleteDoc('orders', '${o.id}')" class="text-slate-200 hover:text-red-500 transition text-xl px-3"><i class="fas fa-trash-alt"></i></button>
+                        <button onclick="deleteDoc('orders', '${o.id}')" class="text-slate-300 hover:text-red-500 transition p-2"><i class="fas fa-trash-alt text-lg"></i></button>
                     </td>
                 </tr>`;
             });
-            document.getElementById('order-rows').innerHTML = html || '<tr><td colspan="7" class="p-32 text-center text-slate-300 font-black italic tracking-widest">目前查無任何對帳資料...</td></tr>';
+            document.getElementById('order-rows').innerHTML = html || '<tr><td colspan="7" class="p-32 text-center text-slate-300 font-black italic">尚無任何符合條件的紀錄...</td></tr>';
         }
 
-        async function toggleCheck(id, s) { await db.collection("orders").doc(id).update({ status: s === '已查帳' ? '待查帳' : '已查帳' }); }
+        async function toggleCheck(id, current) {
+            const next = current === '已查帳' ? '待查帳' : '已查帳';
+            await db.collection("orders").doc(id).update({ status: next });
+        }
 
-        // --- 6. Excel 匯出 (包含解析結果) ---
+        // --- 7. Excel 匯出 (包含核心農曆邏輯) ---
         function exportExcel() {
             const data = orders.map(o => ({
-                "登記日期": o.createdAt ? o.createdAt.toDate().toLocaleString() : "-",
-                "類別": o.category, "姓名": o.name, "電話": o.phone,
-                "國曆": o.solarBirthday || o.birthday || "無",
-                "農曆生辰": safeLunarParser(o),
-                "項目": o.item, "金額": o.amount, "狀態": o.status
+                "登記時間": o.createdAt ? o.createdAt.toDate().toLocaleString() : "-",
+                "分類": o.category,
+                "姓名": o.name,
+                "電話": o.phone,
+                "國曆生日": o.solarBirthday || o.birthday || "無",
+                "自動換算農曆": getLunarSafe(o), // 匯出時也同步換算
+                "時辰": o.birthHour || "吉時",
+                "項目": o.item,
+                "金額": o.amount,
+                "狀態": o.status || "待核帳"
             }));
-            const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "財務報表");
-            XLSX.writeFile(wb, `廣寧宮_${new Date().toLocaleDateString()}.xlsx`);
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "廣寧宮核帳報表");
+            XLSX.writeFile(wb, `廣寧宮核帳_${new Date().toLocaleDateString()}.xlsx`);
         }
 
-        // --- 7. 公告管理 CRUD ---
+        // --- 8. 其他模組 CRUD (公告/商品/照片) ---
         async function saveNews() {
             const id = document.getElementById('n-id').value;
-            const title = document.getElementById('n-title').value;
-            const content = document.getElementById('n-content').value;
-            if(!title || !content) return alert("請填內容");
-            const data = { title, content, updatedAt: new Date() };
-            if(id) await db.collection("news").doc(id).update(data);
-            else await db.collection("news").add({ ...data, createdAt: new Date() });
+            const t = document.getElementById('n-title').value;
+            const c = document.getElementById('n-content').value;
+            if(!t || !c) return alert("不可為空");
+            if (id) await db.collection("news").doc(id).update({ title: t, content: c, updatedAt: new Date() });
+            else await db.collection("news").add({ title: t, content: c, createdAt: new Date() });
             clearNewsForm();
         }
 
         function editNews(id, title, content) {
-            document.getElementById('n-id').value = id; document.getElementById('n-title').value = title; document.getElementById('n-content').value = content;
-            document.getElementById('n-form-box').classList.add('edit-mode'); document.getElementById('n-cancel').classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'});
+            document.getElementById('n-id').value = id;
+            document.getElementById('n-title').value = title;
+            document.getElementById('n-content').value = content;
+            document.getElementById('n-form-box').classList.add('edit-mode');
+            document.getElementById('n-label').innerText = "📍 正在編輯消息";
+            document.getElementById('n-cancel').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function clearNewsForm() {
@@ -349,35 +358,66 @@
         }
 
         db.collection("news").orderBy("createdAt", "desc").onSnapshot(snap => {
-            let h = ""; snap.forEach(doc => {
-                const n = doc.data(); const safeC = (n.content || "").replace(/\n/g, '\\n').replace(/'/g, "\\'");
-                h += `<div class="bg-white p-6 border rounded-[2rem] flex justify-between shadow-md items-center">
+            let h = "";
+            snap.forEach(doc => {
+                const n = doc.data();
+                const safeC = (n.content || "").replace(/\n/g, '\\n').replace(/'/g, "\\'");
+                h += `<div class="bg-white p-6 border rounded-3xl flex justify-between items-center shadow-md hover:shadow-lg transition">
                     <div class="font-black text-slate-800">${n.title}</div>
-                    <div class="flex gap-2"><button onclick="editNews('${doc.id}','${n.title}','${safeC}')" class="text-blue-500 font-black text-xs px-3 py-1">編輯</button><button onclick="deleteDoc('news','${doc.id}')" class="text-red-400 font-black text-xs px-3 py-1">刪除</button></div>
+                    <div class="flex gap-4">
+                        <button onclick="editNews('${doc.id}', '${n.title}', '${safeC}')" class="text-blue-500 font-black text-xs">編輯</button>
+                        <button onclick="deleteDoc('news', '${doc.id}')" class="text-red-400 font-black text-xs">刪除</button>
+                    </div>
                 </div>`;
             });
             document.getElementById('admin-news-list').innerHTML = h;
         });
 
-        // --- 8. 其他上傳與刪除邏輯 ---
+        // 商品管理
         async function saveProduct() {
-            const f = document.getElementById('prod-file').files[0];
-            let url = ""; if(f){ const r = storage.ref(`products/${Date.now()}_${f.name}`); await r.put(f); url = await r.getDownloadURL(); }
-            const data = { name: document.getElementById('prod-name').value, price: parseInt(document.getElementById('prod-price').value), updatedAt: new Date() };
-            if(url) data.url = url;
-            await db.collection("products").add({ ...data, createdAt: new Date() });
+            const id = document.getElementById('prod-id').value;
+            const n = document.getElementById('prod-name').value;
+            const p = parseInt(document.getElementById('prod-price').value);
+            const file = document.getElementById('prod-file').files[0];
+            let url = ""; 
+            if (file) {
+                const path = `products/${Date.now()}_${file.name}`;
+                const ref = storage.ref(path);
+                await ref.put(file);
+                url = await ref.getDownloadURL();
+            }
+            const data = { name: n, price: p, updatedAt: new Date() };
+            if (url) data.url = url;
+            if (id) await db.collection("products").doc(id).update(data);
+            else await db.collection("products").add({ ...data, createdAt: new Date() });
             location.reload();
         }
+
         db.collection("products").onSnapshot(snap => {
-            let h = ""; snap.forEach(doc => { const p = doc.data(); h += `<div class="bg-white p-5 rounded-[2.5rem] border shadow-xl text-center"><img src="${p.url}" class="h-32 w-full object-cover rounded-3xl mb-4 border"><div class="font-black text-sm text-slate-800">${p.name}</div><div class="text-red-600 font-black mb-3">$${p.price}</div><button onclick="deleteDoc('products','${doc.id}')" class="text-slate-300 hover:text-red-500 font-bold text-[10px]">下架刪除</button></div>`; });
+            let h = "";
+            snap.forEach(doc => {
+                const p = doc.data();
+                h += `<div class="bg-white p-5 rounded-[2.5rem] shadow-lg text-center border">
+                    <img src="${p.url}" class="h-32 w-full object-cover rounded-3xl mb-4 shadow-inner">
+                    <div class="font-black text-sm text-slate-800 mb-1">${p.name}</div>
+                    <div class="text-red-600 font-black">$${p.price}</div>
+                    <button onclick="deleteDoc('products', '${doc.id}')" class="mt-4 text-slate-300 hover:text-red-400 text-xs font-bold transition">移除下架</button>
+                </div>`;
+            });
             document.getElementById('admin-prod-list').innerHTML = h;
         });
 
+        // 照片牆管理
         async function uploadPhoto() {
-            const f = document.getElementById('p-file').files[0]; const t = document.getElementById('p-title').value;
-            const btn = document.getElementById('p-btn'); const prog = document.getElementById('p-prog'); const bar = document.getElementById('p-bar');
+            const f = document.getElementById('p-file').files[0];
+            const t = document.getElementById('p-title').value;
+            if(!f || !t) return alert("請完整填寫");
+            const btn = document.getElementById('p-btn');
+            const prog = document.getElementById('p-prog');
+            const bar = document.getElementById('p-bar');
             btn.disabled = true; prog.classList.remove('hidden');
-            const path = `gallery/${Date.now()}_${f.name}`; const task = storage.ref(path).put(f);
+            const path = `gallery/${Date.now()}_${f.name}`;
+            const task = storage.ref(path).put(f);
             task.on('state_changed', s => { bar.style.width = (s.bytesTransferred / s.totalBytes) * 100 + '%'; }, null, async () => {
                 const url = await task.snapshot.ref.getDownloadURL();
                 await db.collection("photos").add({ title: t, url, path, createdAt: new Date() });
@@ -385,17 +425,47 @@
             });
         }
         db.collection("photos").orderBy("createdAt", "desc").onSnapshot(snap => {
-            let h = ""; snap.forEach(doc => { h += `<div class="relative group shadow-lg"><img src="${doc.data().url}" class="h-40 w-full object-cover rounded-[2rem] border-4 border-white"><button onclick="deleteDoc('photos', '${doc.id}')" class="absolute top-2 right-2 bg-red-600 text-white w-8 h-8 rounded-full shadow-2xl opacity-0 group-hover:opacity-100 transition">×</button></div>`; });
+            let h = ""; snap.forEach(doc => {
+                h += `<div class="relative group"><img src="${doc.data().url}" class="h-40 w-full object-cover rounded-3xl shadow-md border-2 border-white"><button onclick="deleteDoc('photos', '${doc.id}')" class="absolute top-3 right-3 bg-red-600 text-white w-8 h-8 rounded-full shadow-2xl opacity-0 group-hover:opacity-100 transition">×</button></div>`;
+            });
             document.getElementById('admin-photo-grid').innerHTML = h;
         });
 
-        async function saveService() { const n = document.getElementById('s-name').value; const p = parseInt(document.getElementById('s-price').value); await db.collection("services").add({ name: n, price: p, createdAt: new Date() }); location.reload(); }
-        db.collection("services").onSnapshot(snap => { let h = ""; snap.forEach(doc => { h += `<div class="bg-white p-5 border rounded-2xl flex justify-between shadow-md items-center font-black">🏮 ${doc.data().name} <span class="text-red-500 ml-4">$${doc.data().price}</span> <button onclick="deleteDoc('services','${doc.id}')" class="text-red-400 text-xs">刪除</button></div>`; }); document.getElementById('admin-serv-list').innerHTML = h; });
+        // 祈福與影音 (保持基本功能)
+        async function saveService() {
+            const n = document.getElementById('s-name').value;
+            const p = parseInt(document.getElementById('s-price').value);
+            await db.collection("services").add({ name: n, price: p, createdAt: new Date() });
+            location.reload();
+        }
+        db.collection("services").onSnapshot(snap => {
+            let h = ""; snap.forEach(doc => {
+                h += `<div class="bg-white p-5 rounded-2xl border flex justify-between items-center shadow-md">
+                    <span class="font-black text-slate-700">🏮 ${doc.data().name} <span class="text-red-500 ml-4">$${doc.data().price}</span></span>
+                    <button onclick="deleteDoc('services', '${doc.id}')" class="text-red-400 font-black text-xs p-2">刪除</button>
+                </div>`;
+            });
+            document.getElementById('admin-serv-list').innerHTML = h;
+        });
 
-        async function saveVideo() { const t = document.getElementById('v-title').value; const y = document.getElementById('v-ytid').value; await db.collection("videos").add({ title: t, ytid: y, createdAt: new Date() }); location.reload(); }
-        db.collection("videos").onSnapshot(snap => { let h = ""; snap.forEach(doc => { h += `<div class="bg-white p-5 border rounded-2xl flex justify-between shadow-md items-center font-black">🎥 ${doc.data().title} <button onclick="deleteDoc('videos','${doc.id}')" class="text-red-400 text-xs">刪除</button></div>`; }); document.getElementById('admin-video-list').innerHTML = h; });
+        async function saveVideo() {
+            const t = document.getElementById('v-title').value;
+            const y = document.getElementById('v-ytid').value;
+            await db.collection("videos").add({ title: t, ytid: y, createdAt: new Date() });
+            location.reload();
+        }
+        db.collection("videos").onSnapshot(snap => {
+            let h = ""; snap.forEach(doc => {
+                h += `<div class="bg-white p-5 rounded-2xl border flex justify-between items-center shadow-md">
+                    <span class="font-black text-slate-700">🎥 ${doc.data().title}</span>
+                    <button onclick="deleteDoc('videos', '${doc.id}')" class="text-red-400 font-black text-xs p-2">刪除</button>
+                </div>`;
+            });
+            document.getElementById('admin-video-list').innerHTML = h;
+        });
 
-        async function deleteDoc(c, id) { if (confirm("🚨 警告：此資料將從雲端永久移除，確定執行？")) await db.collection(c).doc(id).delete(); }
+        // 通用刪除邏輯
+        async function deleteDoc(coll, id) { if(confirm("🚨 警告：資料刪除後無法恢復，確定執行嗎？")) await db.collection(coll).doc(id).delete(); }
     </script>
 </body>
 </html>
