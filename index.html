@@ -31,7 +31,7 @@
         .dropdown-menu { display: none; position: absolute; left: 0; top: 90%; padding-top: 20px; width: 14rem; z-index: 50; }
         .dropdown:hover .dropdown-menu { display: block; }
         
-        /* 手機側邊欄 */
+        /* 手機側邊欄樣式 */
         #mobile-drawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: white; z-index: 200; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
         #mobile-drawer.active { right: 0; }
         
@@ -46,7 +46,7 @@
                 <div class="w-10 h-10 bg-t-red rounded-full flex items-center justify-center text-white text-xl shadow-lg">廣</div>
                 <h1 class="text-xl tracking-tighter text-t-blue uppercase">員林廣寧宮</h1>
             </div>
-
+            
             <ul class="hidden lg:flex space-x-10 text-sm items-center">
                 <li class="dropdown">
                     <a class="cursor-pointer hover:text-t-gold pb-4 block">關於廣寧宮 <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
@@ -79,32 +79,34 @@
 
     <div id="mobile-drawer">
         <div class="p-6 flex justify-between items-center border-b shadow-sm">
-            <span class="font-black text-t-blue text-xl">宮務導覽</span>
+            <span class="font-black text-t-blue text-xl">廣寧宮導覽</span>
             <button onclick="toggleMobileDrawer()" class="text-3xl">×</button>
         </div>
         <div class="p-8 space-y-8">
-            <a onclick="showPage('home')" class="flex items-center space-x-4 text-xl font-bold border-b pb-4"><i class="fas fa-home text-t-gold"></i> <span>首頁</span></a>
+            <a onclick="showPage('home')" class="flex items-center space-x-4 text-xl font-bold border-b pb-4">
+                <i class="fas fa-home text-t-gold"></i> <span>回首頁</span>
+            </a>
             
             <div>
-                <p class="text-xs text-slate-400 font-bold mb-4 uppercase tracking-widest">關於本宮</p>
+                <p class="text-xs text-slate-400 font-bold mb-4 uppercase tracking-widest">關於廣寧宮</p>
                 <div class="grid gap-2">
-                    <a onclick="showPage('about','history')" class="p-4 bg-slate-50 rounded-xl font-bold flex justify-between items-center">📖 歷史沿革 <i class="fas fa-chevron-right text-xs opacity-20"></i></a>
-                    <a onclick="showPage('about','kings')" class="p-4 bg-slate-50 rounded-xl font-bold flex justify-between items-center">👑 主祀三山國王 <i class="fas fa-chevron-right text-xs opacity-20"></i></a>
-                    <a onclick="showPage('about','deities')" class="p-4 bg-slate-50 rounded-xl font-bold flex justify-between items-center">🙏 配祀神祉介紹 <i class="fas fa-chevron-right text-xs opacity-20"></i></a>
+                    <a onclick="showPage('about','history')" class="p-4 bg-slate-50 rounded-xl font-bold flex justify-between">📖 歷史沿革 <i class="fas fa-chevron-right text-xs opacity-20"></i></a>
+                    <a onclick="showPage('about','kings')" class="p-4 bg-slate-50 rounded-xl font-bold flex justify-between">👑 主祀三山國王 <i class="fas fa-chevron-right text-xs opacity-20"></i></a>
+                    <a onclick="showPage('about','deities')" class="p-4 bg-slate-50 rounded-xl font-bold flex justify-between">🙏 配祀神祉介紹 <i class="fas fa-chevron-right text-xs opacity-20"></i></a>
                 </div>
             </div>
 
             <div>
                 <p class="text-xs text-slate-400 font-bold mb-4 uppercase tracking-widest">線上服務</p>
                 <div class="grid grid-cols-2 gap-4">
-                    <a onclick="showPage('service','bless')" class="p-5 bg-t-gold text-white rounded-2xl text-center font-bold shadow-lg italic">祈福點燈</a>
-                    <a onclick="showPage('service','donate')" class="p-5 bg-t-red text-white rounded-2xl text-center font-bold shadow-lg italic">香油錢</a>
+                    <a onclick="showPage('service','bless')" class="p-5 bg-t-gold text-white rounded-2xl text-center font-bold shadow-lg">祈福點燈</a>
+                    <a onclick="showPage('service','donate')" class="p-5 bg-t-red text-white rounded-2xl text-center font-bold shadow-lg">捐獻油香</a>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-2 text-sm font-bold pt-6 border-t">
+            <div class="grid grid-cols-2 gap-2 text-sm font-bold pt-4 border-t">
                 <a onclick="showPage('products')" class="p-4 border rounded-xl text-center">文創商品</a>
-                <a onclick="showPage('gallery')" class="p-4 border rounded-xl text-center">活動照片</a>
+                <a onclick="showPage('gallery')" class="p-4 border rounded-xl text-center">活動花絮</a>
                 <a onclick="showPage('video')" class="p-4 border rounded-xl text-center">影音專區</a>
                 <a onclick="showPage('contact')" class="p-4 border rounded-xl text-center">聯絡我們</a>
             </div>
@@ -115,13 +117,16 @@
         
         <section id="home" class="page-section active">
             <div class="h-[45vh] bg-slate-900 rounded-[3rem] mb-12 flex items-center justify-center text-white text-center p-6 shadow-2xl relative overflow-hidden">
-                <div class="z-10"><h2 class="text-4xl md:text-7xl font-black font-serif tracking-[0.1em]">三百年香火</h2><p class="mt-4 italic opacity-90 uppercase tracking-widest text-lg">乾隆四年創立 · 員林王爺宮</p></div>
+                <div class="z-10">
+                    <h2 class="text-4xl md:text-7xl font-black font-serif tracking-[0.1em] drop-shadow-2xl">三百年香火</h2>
+                    <p class="mt-4 italic opacity-90 uppercase tracking-widest text-lg">乾隆四年創立 · 員林王爺宮</p>
+                </div>
                 <div class="absolute inset-0 bg-black/40"></div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 <div class="lg:col-span-1 bg-white p-8 rounded-[2.5rem] shadow-xl border-t-8 border-t-red">
                     <h3 class="font-black text-2xl mb-6 flex justify-between items-center">最新消息 <i class="fas fa-bullhorn text-red-600"></i></h3>
-                    <div id="home-news-list" class="space-y-4"></div>
+                    <div id="home-news-list" class="space-y-4 text-sm font-bold"></div>
                 </div>
                 <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8" id="home-services-display"></div>
             </div>
@@ -131,28 +136,22 @@
             <div id="content-history" class="sub-content bg-white p-10 md:p-16 rounded-[3.5rem] shadow-xl leading-loose">
                 <h2 class="text-4xl font-black mb-8 text-t-blue border-b pb-4 font-serif">本宮歷史沿革</h2>
                 <div class="space-y-6 text-lg text-gray-700">
-                    <p>員林廣寧宮歷史悠久，自清康熙五十年前後（約 1711 年）廣東潮州籍移民開墾員林以來，便迎請三山國王守護地界。乾隆四年（1739年）正式創廟，是當地最具規模的潮州客家信仰中心。</p>
-                    <p>廟內存有許多清代古匾如「國王廟」、「七州公」等，見證了員林地區從農業拓荒到現代繁榮商圈的三百年滄桑變遷。</p>
+                    <p>員林廣寧宮座落於員林中正路，與福寧宮並肩而立，是員林地區最古老的廟宇之一。其歷史可追溯至康熙年間，當時廣東潮州移民橫渡黑水溝，為求保佑平順，將故鄉三山國王香火迎請至此。</p>
+                    <p>乾隆四年正式建廟後，廣寧宮成為員林平原潮州客家移民的信仰核心。廟內「七州公」之稱呼，更代表了當時潮州府下轄七縣移民的團結精神。</p>
                 </div>
             </div>
             <div id="content-kings" class="sub-content hidden bg-white p-12 rounded-[3.5rem] shadow-xl text-center">
                 <h2 class="text-3xl font-black mb-12 text-t-blue font-serif">主祀：三山國王</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="p-10 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-black text-xl flex flex-col items-center">
-                        <span class="text-t-red text-sm mb-2">大國王</span>巾山國王
-                    </div>
-                    <div class="p-10 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-black text-xl flex flex-col items-center">
-                        <span class="text-t-red text-sm mb-2">二國王</span>明山國王
-                    </div>
-                    <div class="p-10 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-black text-xl flex flex-col items-center">
-                        <span class="text-t-red text-sm mb-2">三國王</span>獨山國王
-                    </div>
+                    <div class="p-10 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-black text-xl">巾山大國王</div>
+                    <div class="p-10 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-black text-xl">明山二國王</div>
+                    <div class="p-10 border-4 border-slate-50 rounded-[2.5rem] bg-slate-50 font-black text-xl">獨山三國王</div>
                 </div>
             </div>
             <div id="content-deities" class="sub-content hidden grid grid-cols-1 md:grid-cols-3 gap-8 text-center font-bold">
-                <div class="bg-white p-10 rounded-[3rem] shadow-xl border-t-8 border-yellow-500 text-xl italic">文昌帝君</div>
-                <div class="bg-white p-10 rounded-[3rem] shadow-xl border-t-8 border-blue-500 text-xl italic">觀音佛祖</div>
-                <div class="bg-white p-10 rounded-[3rem] shadow-xl border-t-8 border-pink-500 text-xl italic">註生娘娘</div>
+                <div class="bg-white p-10 rounded-[3rem] shadow-xl border-t-8 border-yellow-500 text-xl">文昌帝君</div>
+                <div class="bg-white p-10 rounded-[3rem] shadow-xl border-t-8 border-blue-500 text-xl">觀音佛祖</div>
+                <div class="bg-white p-10 rounded-[3rem] shadow-xl border-t-8 border-pink-500 text-xl">註生娘娘</div>
             </div>
         </section>
 
@@ -162,48 +161,48 @@
                 <h2 class="text-3xl font-black text-center text-t-gold mb-8 italic">祈福點燈登記</h2>
                 <div class="space-y-4">
                     <div>
-                        <label class="text-xs font-bold text-slate-400 ml-2 uppercase tracking-widest">信眾姓名</label>
+                        <label class="text-xs font-bold text-slate-400 ml-2">信眾姓名</label>
                         <input type="text" id="b_name" placeholder="請輸入姓名" class="w-full border-2 p-4 rounded-2xl outline-none focus:border-t-gold text-lg">
                     </div>
                     <div>
-                        <label class="text-xs font-bold text-slate-400 ml-2 uppercase tracking-widest">連絡電話 (需接收驗證碼)</label>
+                        <label class="text-xs font-bold text-slate-400 ml-2">連絡電話</label>
                         <div class="flex space-x-2">
                             <input type="tel" id="b_phone" placeholder="0912345678" class="flex-1 border-2 p-4 rounded-2xl outline-none focus:border-t-gold">
-                            <button onclick="sendOTP('bless')" id="btn-otp-bless" class="bg-t-blue text-white px-5 py-2 rounded-2xl text-sm font-black whitespace-nowrap shadow-md">傳送驗證碼</button>
+                            <button onclick="sendOTP('bless')" id="btn-otp-bless" class="bg-t-blue text-white px-5 py-2 rounded-2xl text-sm font-black whitespace-nowrap shadow-md">發送驗證碼</button>
                         </div>
                     </div>
                     <div id="otp-area-bless" class="hidden animate-fadeIn">
-                        <label class="text-xs font-bold text-slate-400 ml-2 uppercase tracking-widest text-t-red">簡訊驗證碼</label>
-                        <input type="text" id="b_otp" placeholder="輸入 6 位數字" class="w-full border-2 p-4 rounded-2xl outline-none border-t-gold bg-t-gold/5 text-center font-black text-2xl tracking-[0.5em]">
+                        <label class="text-xs font-bold text-t-red ml-2 tracking-widest">簡訊驗證碼</label>
+                        <input type="text" id="b_otp" placeholder="請輸入 6 位數字" class="w-full border-2 p-4 rounded-2xl text-center font-black text-2xl tracking-[0.3em] bg-t-gold/5 border-t-gold outline-none">
                     </div>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="text-xs font-bold text-slate-400 ml-2 uppercase tracking-widest">國曆出生日期</label>
+                            <label class="text-xs font-bold text-slate-400 ml-2">國曆出生日期</label>
                             <input type="date" id="b_birth_date" onchange="updateLunar()" class="w-full border-2 p-4 rounded-2xl outline-none font-bold">
                             <div id="lunar-hint" class="text-t-red font-bold text-sm mt-2 ml-2 min-h-[1.5rem] italic"></div>
                         </div>
                         <div>
-                            <label class="text-xs font-bold text-slate-400 ml-2 uppercase tracking-widest">出生時辰</label>
+                            <label class="text-xs font-bold text-slate-400 ml-2">出生時辰 (12時辰)</label>
                             <select id="b_birth_hour" class="w-full border-2 p-4 rounded-2xl font-bold bg-slate-50 appearance-none">
                                 <option value="吉時">吉時 (時辰不詳)</option>
-                                <option value="子時 (23:00-01:00)">子時 (23:00-01:00)</option>
-                                <option value="丑時 (01:00-03:00)">丑時 (01:00-03:00)</option>
-                                <option value="寅時 (03:00-05:00)">寅時 (03:00-05:00)</option>
-                                <option value="卯時 (05:00-07:00)">卯時 (05:00-07:00)</option>
-                                <option value="辰時 (07:00-09:00)">辰時 (07:00-09:00)</option>
-                                <option value="巳時 (09:00-11:00)">巳時 (09:00-11:00)</option>
-                                <option value="午時 (11:00-13:00)">午時 (11:00-13:00)</option>
-                                <option value="未時 (13:00-15:00)">未時 (13:00-15:00)</option>
-                                <option value="申時 (15:00-17:00)">申時 (15:00-17:00)</option>
-                                <option value="酉時 (17:00-19:00)">酉時 (17:00-19:00)</option>
-                                <option value="戌時 (19:00-21:00)">戌時 (19:00-21:00)</option>
-                                <option value="亥時 (21:00-23:00)">亥時 (21:00-23:00)</option>
+                                <option value="子 (23:00-01:00)">子 (23-01)</option>
+                                <option value="丑 (01:00-03:00)">丑 (01-03)</option>
+                                <option value="寅 (03:00-05:00)">寅 (03-05)</option>
+                                <option value="卯 (05:00-07:00)">卯 (05-07)</option>
+                                <option value="辰 (07:00-09:00)">辰 (07-09)</option>
+                                <option value="巳 (09:00-11:00)">巳 (09-11)</option>
+                                <option value="午 (11:00-13:00)">午 (11-13)</option>
+                                <option value="未 (13:00-15:00)">未 (13-15)</option>
+                                <option value="申 (15:00-17:00)">申 (15-17)</option>
+                                <option value="酉 (17:00-19:00)">酉 (17-19)</option>
+                                <option value="戌 (19:00-21:00)">戌 (19-21)</option>
+                                <option value="亥 (21:00-23:00)">亥 (21-23)</option>
                             </select>
                         </div>
                     </div>
                     
-                    <select id="service-select" class="w-full border-2 p-4 rounded-2xl font-bold bg-slate-50 border-t-gold/30"></select>
+                    <select id="service-select" class="w-full border-2 p-4 rounded-2xl font-bold bg-slate-50"></select>
                     <button onclick="submitOrder('點燈')" id="btn-bless" class="w-full bg-t-gold text-white py-5 rounded-3xl font-black shadow-xl hover:bg-black transition text-lg mt-4 italic">確認登記並送出</button>
                 </div>
             </div>
@@ -212,61 +211,47 @@
                 <h2 class="text-3xl font-black text-t-red mb-8 italic">香油錢捐獻</h2>
                 <div class="space-y-4 text-left">
                     <div>
-                        <label class="text-xs font-bold text-slate-400 ml-2 uppercase">捐獻金額 (TWD)</label>
-                        <input type="number" id="d_amount" placeholder="請輸入金額" class="w-full border-2 p-6 rounded-2xl text-4xl font-black text-center border-red-100 bg-red-50/20 outline-none mb-4">
+                        <label class="text-xs font-bold text-slate-400 ml-2">捐獻金額 (TWD)</label>
+                        <input type="number" id="d_amount" placeholder="請輸入金額" class="w-full border-2 p-6 rounded-2xl text-4xl font-black text-center border-red-100 bg-red-50/20 outline-none mb-2">
                     </div>
                     <div>
-                        <label class="text-xs font-bold text-slate-400 ml-2 uppercase">大德姓名</label>
-                        <input type="text" id="d_name" placeholder="請輸入姓名" class="w-full border-2 p-4 rounded-2xl mb-2 outline-none focus:border-t-red">
+                        <label class="text-xs font-bold text-slate-400 ml-2">大德姓名</label>
+                        <input type="text" id="d_name" placeholder="請輸入姓名" class="w-full border-2 p-4 rounded-2xl mb-2 outline-none">
                     </div>
                     <div>
-                        <label class="text-xs font-bold text-slate-400 ml-2 uppercase">連絡電話</label>
+                        <label class="text-xs font-bold text-slate-400 ml-2">連絡電話</label>
                         <div class="flex space-x-2">
-                            <input type="tel" id="d_phone" placeholder="連絡電話" class="flex-1 border-2 p-4 rounded-2xl outline-none focus:border-t-red">
-                            <button onclick="sendOTP('donate')" id="btn-otp-donate" class="bg-t-red text-white px-5 py-2 rounded-2xl text-sm font-black whitespace-nowrap shadow-md">傳送驗證碼</button>
+                            <input type="tel" id="d_phone" placeholder="0912345678" class="flex-1 border-2 p-4 rounded-2xl outline-none focus:border-t-red">
+                            <button onclick="sendOTP('donate')" id="btn-otp-donate" class="bg-t-red text-white px-5 py-2 rounded-2xl text-sm font-bold shadow-md">發送驗證碼</button>
                         </div>
                     </div>
                     <div id="otp-area-donate" class="hidden animate-fadeIn">
-                        <label class="text-xs font-bold text-slate-400 ml-2 uppercase tracking-widest text-t-red">驗證碼</label>
-                        <input type="text" id="d_otp" placeholder="請輸入驗證碼" class="w-full border-2 p-4 rounded-2xl text-center font-black tracking-widest border-red-200 bg-red-50 outline-none">
+                        <label class="text-xs font-bold text-t-red ml-2">驗證碼</label>
+                        <input type="text" id="d_otp" placeholder="輸入 6 位驗證碼" class="w-full border-2 p-4 rounded-2xl text-center font-bold tracking-widest border-red-200 bg-red-50 outline-none">
                     </div>
                     <button onclick="submitOrder('捐獻')" id="btn-donate" class="w-full bg-t-red text-white py-5 rounded-3xl font-black shadow-xl hover:bg-black transition text-lg mt-4 italic">完成功德登記</button>
                 </div>
             </div>
         </section>
 
-        <section id="products" class="page-section max-w-7xl mx-auto py-10"><h2 class="text-4xl font-black text-center mb-16 font-serif uppercase tracking-widest">文創商品展示</h2><div id="display-products" class="grid grid-cols-2 md:grid-cols-4 gap-8"></div></section>
-        <section id="video" class="page-section max-w-6xl mx-auto py-10"><h2 class="text-4xl font-black text-center mb-16 font-serif">影音紀實作品</h2><div id="display-videos" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div></section>
-        <section id="gallery" class="page-section max-w-7xl mx-auto py-10"><h2 class="text-4xl font-black text-center mb-16 font-serif">活動照片花絮</h2><div id="display-photos" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div></section>
+        <section id="products" class="page-section max-w-7xl mx-auto py-10"><h2 class="text-4xl font-black text-center mb-16 font-serif uppercase tracking-widest">文創商品</h2><div id="display-products" class="grid grid-cols-2 md:grid-cols-4 gap-8"></div></section>
+        <section id="video" class="page-section max-w-6xl mx-auto py-10"><h2 class="text-4xl font-black text-center mb-16 font-serif">影音專區</h2><div id="display-videos" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div></section>
+        <section id="gallery" class="page-section max-w-7xl mx-auto py-10"><h2 class="text-4xl font-black text-center mb-16 font-serif">活動花絮</h2><div id="display-photos" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div></section>
         
         <section id="contact" class="page-section max-w-5xl mx-auto py-10">
             <div class="bg-white p-12 rounded-[4rem] shadow-2xl grid md:grid-cols-2 gap-12 text-center md:text-left">
-                <div>
-                    <h3 class="text-3xl font-black mb-8 border-b pb-4 text-t-red font-serif italic">聯絡資訊</h3>
-                    <div class="space-y-6 text-xl text-slate-600">
-                        <p><i class="fas fa-map-marker-alt w-8 text-t-gold"></i> 彰化縣員林市中正路360號</p>
-                        <p><i class="fas fa-phone w-8 text-t-gold"></i> 04-8320436</p>
-                        <p><i class="fas fa-clock w-8 text-t-gold"></i> 每日 06:00 - 21:00</p>
-                    </div>
-                </div>
-                <div class="flex flex-col items-center justify-center">
-                    <h3 class="text-2xl font-black mb-8 text-t-blue">社群追蹤</h3>
-                    <div class="flex space-x-12 text-6xl">
-                        <a href="#" class="text-green-500 hover:scale-110 transition"><i class="fab fa-line"></i></a>
-                        <a href="#" class="text-blue-700 hover:scale-110 transition"><i class="fab fa-facebook-square"></i></a>
-                    </div>
-                </div>
+                <div><h3 class="text-3xl font-black mb-8 border-b pb-4 text-t-red font-serif italic">聯絡資訊</h3><p class="text-xl mb-4 font-bold text-slate-600"><i class="fas fa-map-marker-alt mr-4 text-t-gold"></i> 彰化縣員林市中正路360號</p><p class="text-xl font-bold text-slate-600"><i class="fas fa-phone mr-4 text-t-gold"></i> 04-8320436</p></div>
+                <div class="flex flex-col items-center justify-center"><h3 class="text-2xl font-black mb-8 text-t-blue">社群追蹤</h3><div class="flex space-x-12 text-6xl"><i class="fab fa-line text-green-500"></i><i class="fab fa-facebook text-blue-700"></i></div></div>
             </div>
         </section>
     </main>
 
     <div id="recaptcha-container"></div>
-    
     <div id="bank-modal" class="fixed inset-0 bg-black/90 z-[300] hidden items-center justify-center p-6 backdrop-blur-md">
-        <div class="bg-white rounded-[3rem] p-10 max-w-lg w-full text-center shadow-2xl animate-fadeIn">
+        <div class="bg-white rounded-[3rem] p-10 max-w-lg w-full text-center shadow-2xl">
             <h2 class="text-3xl font-black mb-4 text-green-600 italic">登記成功</h2>
             <div id="order-confirm-info" class="bg-slate-50 p-6 rounded-2xl text-left border-2 border-dashed border-slate-200 mb-8 font-bold text-sm leading-relaxed text-slate-600"></div>
-            <button onclick="location.reload()" class="w-full bg-t-blue text-white py-5 rounded-2xl font-black">返回官網首頁</button>
+            <button onclick="location.reload()" class="w-full bg-t-blue text-white py-5 rounded-2xl font-black">返回官網</button>
         </div>
     </div>
 
@@ -278,10 +263,10 @@
         const auth = firebase.auth();
         let confirmationResult = null;
         
-        // 初始化 reCAPTCHA
+        // 初始化 reCAPTCHA 驗證器 (Phone Auth 專用)
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'invisible' });
 
-        // --- 2. 核心功能：農曆轉換 ---
+        // --- 2. 農曆與 UI 控制 ---
         function updateLunar() {
             const dateVal = document.getElementById('b_birth_date').value;
             const hint = document.getElementById('lunar-hint');
@@ -289,69 +274,62 @@
             const lunar = Solar.fromDate(new Date(dateVal)).getLunar();
             const res = `${lunar.getYearInGanZhi()}年(${lunar.getYearZodiac()}) ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`;
             hint.innerText = "⛩️ 農曆：" + res;
-            window.currentLunar = res; // 全域存檔
+            window.currentLunar = res;
         }
 
-        // --- 3. UI 導航與側欄控制 ---
-        function showPage(pageId, subId = null) {
-            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-            const target = document.getElementById('page-' + pageId) || document.getElementById(pageId);
+        function showPage(p, s) {
+            document.querySelectorAll('.page-section').forEach(x=>x.classList.remove('active'));
+            const target = document.getElementById('page-'+p) || document.getElementById(p);
             if(target) target.classList.add('active');
-            
-            if(subId) {
-                document.querySelectorAll('.sub-content').forEach(c => c.classList.add('hidden'));
-                const subContent = document.getElementById('content-' + subId);
-                if(subContent) subContent.classList.remove('hidden');
+            if(s) {
+                document.querySelectorAll('.sub-content').forEach(x=>x.classList.add('hidden'));
+                document.getElementById('content-'+s).classList.remove('hidden');
             }
             document.getElementById('mobile-drawer').classList.remove('active');
-            window.scrollTo({top: 0, behavior: 'smooth'});
+            window.scrollTo({top:0, behavior:'smooth'});
         }
+        function toggleMobileDrawer() { document.getElementById('mobile-drawer').classList.toggle('active'); }
 
-        function toggleMobileDrawer() {
-            document.getElementById('mobile-drawer').classList.toggle('active');
-        }
-
-        // --- 4. 手機簡訊驗證發送 ---
+        // --- 3. 手機簡訊驗證邏輯 (修復 null 選取報錯) ---
         async function sendOTP(type) {
-            const prefix = type === 'bless' ? 'b' : 'd';
+            // 修正點：必須根據 type 明確抓取 ID
+            const prefix = (type === 'bless') ? 'b' : 'd';
             const phone = document.getElementById(prefix + '_phone').value;
-            if(!/^09\d{8}$/.test(phone)) return alert("請輸入正確的手機號碼 (09開頭共10位)");
-            
-            const btn = document.getElementById('btn-otp-' + prefix);
-            const otpArea = document.getElementById('otp-area-' + prefix);
+            const btn = document.getElementById('btn-otp-' + type); // 對應 btn-otp-bless 或 btn-otp-donate
+            const otpArea = document.getElementById('otp-area-' + type);
+
+            if(!/^09\d{8}$/.test(phone)) return alert("請輸入正確的 10 位手機號碼");
             
             btn.disabled = true; btn.innerText = "傳送中...";
             try {
                 const formattedPhone = "+886" + phone.substring(1);
                 confirmationResult = await auth.signInWithPhoneNumber(formattedPhone, window.recaptchaVerifier);
-                alert("驗證碼已傳送至您的手機，請注意簡訊通知");
+                alert("驗證碼已送出！");
                 otpArea.classList.remove('hidden');
                 btn.innerText = "重新發送"; btn.disabled = false;
-            } catch (e) { alert("發送失敗：" + e.message); btn.disabled = false; btn.innerText = "發送驗證碼"; }
+            } catch (e) { alert("發送失敗: " + e.message); btn.disabled = false; btn.innerText = "重新傳送"; }
         }
 
-        // --- 5. 訂單提交 (包含生辰資料對接後台) ---
+        // --- 4. 訂單提交 ---
         async function submitOrder(type) {
-            const prefix = type === '點燈' ? 'b' : 'd';
+            const prefix = (type === '點燈') ? 'b' : 'd';
             const name = document.getElementById(prefix + '_name').value;
             const phone = document.getElementById(prefix + '_phone').value;
             const otp = document.getElementById(prefix + '_otp').value;
             
-            if(!name || !phone || !otp) return alert("請完整填寫姓名、電話並完成手機簡訊驗證");
-            if(type === '捐獻' && !document.getElementById('d_amount').value) return alert("請輸入捐獻金額");
-
+            if(!name || !phone || !otp) return alert("請完整填寫姓名、電話並驗證驗證碼");
+            
             const btn = document.getElementById(type === '點燈' ? 'btn-bless' : 'btn-donate');
             btn.disabled = true; btn.innerText = "處理中...";
 
             try {
-                // 核對手機驗證碼
+                // 1. 手機號碼驗證
                 await confirmationResult.confirm(otp);
                 
-                // 通過後啟動機器人檢查並儲存資料
+                // 2. 通過後進行 reCAPTCHA v3 算分並上傳
                 grecaptcha.ready(() => {
                     grecaptcha.execute('6LcznbYsAAAAAByFa1KFc-664MZwKlv5l8tPKJyt', {action: 'submit'}).then(async token => {
-                        let data = { category: type, status: "待查帳", createdAt: firebase.firestore.FieldValue.serverTimestamp(), name, phone, captcha: token };
-                        
+                        let data = { category: type, status: "待查帳", createdAt: firebase.firestore.FieldValue.serverTimestamp(), name, phone };
                         if(type === '點燈') {
                             data.solarBirthday = document.getElementById('b_birth_date').value;
                             data.lunarBirthday = window.currentLunar || "未轉換";
@@ -362,31 +340,27 @@
                             data.amount = document.getElementById('d_amount').value;
                             data.item = "油香功德";
                         }
-
-                        await db.collection("orders").add(data);
                         
-                        // 成功模態窗內容
+                        await db.collection("orders").add(data);
                         document.getElementById('order-confirm-info').innerHTML = `
-                            <p><b>信眾姓名：</b> ${data.name}</p>
-                            ${data.lunarBirthday ? `<p><b>農曆生辰：</b> ${data.lunarBirthday} (${data.birthHour})</p>` : ''}
-                            <p><b>項目/金額：</b> ${data.item} / TWD ${data.amount}</p>
-                            <p class="mt-4 text-t-red font-bold">匯款銀行：員林市農會 (614) 1234-5678-9012-3456</p>
-                            <p class="text-xs text-slate-400">請於完成匯款後告知本宮您的帳號末五碼。</p>
+                            <p>信眾：${data.name}</p>
+                            <p>項目：${data.item}</p>
+                            <p>金額：$${data.amount}</p>
+                            <p class="mt-4 text-t-red font-black">匯款帳號：員林市農會 (614) 1234-5678-9012-3456</p>
                         `;
                         document.getElementById('bank-modal').classList.remove('hidden');
                     });
                 });
-            } catch (e) { alert("驗證碼錯誤，請重新核對"); btn.disabled = false; btn.innerText = "重新送出"; }
+            } catch (e) { alert("驗證碼錯誤，請重新確認"); btn.disabled = false; btn.innerText = "完成登記"; }
         }
 
-        // --- 6. 資料庫同步監聽 ---
+        // --- 5. Firestore 監聽器 (數據動態同步) ---
         db.collection("news").orderBy("createdAt","desc").limit(5).onSnapshot(snap => {
-            let h = ""; snap.forEach(doc => { h += `<div class="p-4 bg-slate-50 border-l-4 border-t-red rounded-xl font-bold text-sm shadow-sm">${doc.data().title}</div>`; });
+            let h = ""; snap.forEach(doc => { h += `<div class="p-4 bg-slate-50 border-l-4 border-t-red rounded-xl shadow-sm">${doc.data().title}</div>`; });
             document.getElementById('home-news-list').innerHTML = h;
         });
-
         db.collection("services").onSnapshot(snap => {
-            let grid = "", opts = '<option value="" disabled selected>請選擇祈福項目</option>';
+            let grid = "", opts = '<option value="" disabled selected>請選擇項目</option>';
             snap.forEach(doc => {
                 const s = doc.data();
                 grid += `<div class="bg-white p-6 rounded-2xl border-t-4 border-t-gold shadow-lg flex justify-between items-center font-bold"><span>${s.name}</span><span class="text-t-red text-2xl">$${s.price}</span></div>`;
@@ -395,11 +369,9 @@
             document.getElementById('home-services-display').innerHTML = grid;
             document.getElementById('service-select').innerHTML = opts;
         });
-
-        db.collection("products").onSnapshot(snap => { let h = ""; snap.forEach(doc => { const p = doc.data(); h += `<div class="bg-white p-4 rounded-3xl shadow-xl text-center border group"><img src="${p.url}" class="w-full h-40 object-cover rounded-2xl mb-4 group-hover:scale-110 transition"><h4 class="font-bold text-t-blue">${p.name}</h4><p class="text-t-red font-black">$${p.price}</p></div>`; }); document.getElementById('display-products').innerHTML = h; });
+        db.collection("products").onSnapshot(snap => { let h = ""; snap.forEach(doc => { const p = doc.data(); h += `<div class="bg-white p-4 rounded-3xl shadow-xl text-center border"><img src="${p.url}" class="w-full h-40 object-cover rounded-2xl mb-4"><h4 class="font-bold text-t-blue">${p.name}</h4><p class="text-t-red font-black">$${p.price}</p></div>`; }); document.getElementById('display-products').innerHTML = h; });
         db.collection("videos").onSnapshot(snap => { let h = ""; snap.forEach(doc => { const v = doc.data(); h += `<div class="bg-white p-4 rounded-[2rem] shadow-xl"><div class="aspect-video bg-black rounded-[1.5rem] overflow-hidden"><iframe class="w-full h-full" src="https://www.youtube.com/embed/${v.ytid}" frameborder="0" allowfullscreen></iframe></div><h4 class="mt-4 px-2 font-bold text-t-blue">${v.title}</h4></div>`; }); document.getElementById('display-videos').innerHTML = h; });
         db.collection("photos").onSnapshot(snap => { let h = ""; snap.forEach(doc => { h += `<div class="rounded-2xl overflow-hidden shadow-md aspect-square"><img src="${doc.data().url}" class="w-full h-full object-cover"></div>`; }); document.getElementById('display-photos').innerHTML = h; });
-
     </script>
 </body>
 </html>
